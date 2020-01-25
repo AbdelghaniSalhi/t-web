@@ -4,6 +4,10 @@
  const server = express();
  const port = process.env.PORT || 5000;
  const dotenv = require('dotenv');
+ const usersRouter = require('./routes/users');
+
+ const connexion = mongoose.connection;
+ const postRoute = require('./routes/routesprivées');
 
  dotenv.config();
 
@@ -13,14 +17,15 @@
  const uri = process.env.ATLAS_URI;
  mongoose.connect(uri, {useNewUrlParser: true, useCreateIndex: true});
 
- const connexion = mongoose.connection;
+
  connexion.once('open',() => {
      console.log("Base de donnée connéctée");
  })
 
- const usersRouter = require('./routes/users');
+
 
  server.use('/users', usersRouter);
+ server.use('/posts', postRoute);
 
  server.get('/', function (req,res) {
     res.setHeader('Content-Type','text/html');
