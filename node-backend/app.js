@@ -1,48 +1,41 @@
 //Libraries
-var express = require('express');
-var mongoose = require('mongoose');
-var cors = require('cors');
-var bodyParser = require('body-parser');
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const dotenv = require('dotenv');
 
+const app = express();
 
-//server configuration
-var basePath = '/todo';
-var port = 6200;
+dotenv.config();
 
-
+const port = process.env.PORT || 6200;
+// Connexion à la base de données Atlas
+const connexion = mongoose.connection;
 
 // Connection to DB
-mongoose.connect('mongodb://mongodb')
-    .then(() => {
-      console.log('Backend Started');
-    })
-    .catch(err => {
-        console.error('Backend error:', err.stack);
-        process.exit(1);
-    });
+const uri = process.env.ATLAS_URI;
+mongoose.connect(uri, {useNewUrlParser: true, useCreateIndex: true});
 
+connexion.once('open', () => {
+  console.log("Connecté à la base de donnée");
+})
 
 // Routes and Backend Funcioncalities
-var todoListRoutes = require('./src/routes/todoListRoutes');
-var postRoute = require('./src/routes/routesprivées');
-var usersRouter = require('./src/routes/users');
+const usersRouter = require('./src/routes/users');
+const postRoute = require('./src/routes/routesprivées');
 
 // App Instance
-var app = express();
-app.use(express.static('public'));
 app.use(cors());
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
-app.use(basePath, todoListRoutes);
+app.use(express.json());
+
 app.use('/users', usersRouter);
 app.use('/posts', postRoute);
 
 app.get('/', function (req,res) {
     res.setHeader('Content-Type','text/html');
-    res.status(200).send('<h1>Wallah ça marches<h1>');
+    res.status(200).send('<h1>Wallah ça marche<h1>');
  });
 
-// Execute App
-app.listen(port, () => {
-  console.log('TodoList Backend running on Port: ',port);
-});
+ app.listen(port, function(){
+   console.log(`Serveur en ecoute : ${port}`);
+ });
