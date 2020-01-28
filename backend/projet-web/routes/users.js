@@ -44,6 +44,13 @@ router.post('/login',async (req,res) => {
     const {error} = loginValidation(req.body)
     if (error) return res.status(400).send(error.details[0].message);
 
+    const email = req.body.email;
+    const password = req.body.password;
+
+    // Verifier que les champs ne sont pas vides
+    if(!email || !password) {
+        return res.status(400).json({ msg: 'Please enter all fields' });
+    }
     // Verifier que l'email existe
     const emailExistant = await User.findOne({email: req.body.email});
     if (!emailExistant) return res.status(400).send("Email ou Mot de Passe incorrect");
@@ -53,7 +60,7 @@ router.post('/login',async (req,res) => {
     if (!mdpValide) return res.status(400).send("Email ou Mot de Passe incorrect");
 
     // création du token
-    const token = jwt.sign({_id: emailExistant._id}, process.env.TOKEN);
+    const token = jwt.sign({_id: emailExistant._id}, {expiresIn: '1h'}, process.env.TOKEN);
 
     res.header('auth-token', token).send(token);
 });
