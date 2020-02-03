@@ -4,7 +4,6 @@ const {registerValidation, loginValidation} = require('../validation')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const verifié = require ('./verifierToken');
-const mongoose = require('mongoose');
 
 router.route('/').get((req, res) =>{
     User.find()
@@ -29,7 +28,8 @@ router.route('/profile').put(verifié, async (req,res) => {
             password : req.body.password ? req.body.password : utilisateur.password,
             currency : req.body.currency ? req.body.currency : utilisateur.currency,
             keywords : req.body.keywords ? req.body.keywords : utilisateur.keywords,
-            cryptoCurrencies : req.body.cryptoCurrencies ? req.body.cryptoCurrencies : utilisateur.cryptoCurrencies
+            cryptoCurrencies : req.body.cryptoCurrencies ? req.body.cryptoCurrencies : utilisateur.cryptoCurrencies,
+            role: utilisateur.role,
         };
 
         
@@ -59,21 +59,26 @@ router.post('/register',async (req,res) => {
     if (user) return res.status(400).send("Email déjà existant");
 
     // crypter les mdp
-     const salt = await bcrypt.genSalt(10);
-     const hashMdp = await bcrypt.hash(req.body.password, salt);
-
+    const salt = await bcrypt.genSalt(10);
+    const hashMdp = await bcrypt.hash(req.body.password, salt);
+    
+    const mail = req.body.email;
+    var role = "Utilisateur";
+    if (mail.includes("epitech.eu")) role = "Administrateur";
     // User a envoyer a la BDD
+    
     const userToPost = new User({
         username: req.body.username,
         email: req.body.email,
         password:hashMdp,
         currency: req.body.currency,
         keywords: req.body.keywords,
-        cryptoCurrencies: req.body.cryptoCurrencies
+        cryptoCurrencies: req.body.cryptoCurrencies,
+        role : role
     });
     try{
         const savedUser = await userToPost.save();
-        res.send( {user : user._id});
+        res.send(savedUser);
     }catch(err) {
         res.status(400).send(err);
     }
