@@ -14,7 +14,7 @@ const connexion = mongoose.connection;
 
 // Connection to DB
 const uri = process.env.ATLAS_URI;
-mongoose.connect(uri, {useNewUrlParser: true, useCreateIndex: true});
+mongoose.connect(uri, { useFindAndModify: false, useUnifiedTopology: true ,useNewUrlParser: true, useCreateIndex: true});
 
 connexion.once('open', () => {
   console.log("Connecté à la base de donnée");
