@@ -16,27 +16,27 @@ const cryptoCurrencySchema = new Schema({
         trim: true,
         minlength: 3
     },
-    currentPrice: {
-        type: Number,
-        required: true,
-        lowercase: true,
-    },
-    openingPrice: {
-        type: Number,
-        required: true
-    },
-    lowestOfTheDay: {
-        type: Number,
-        required: true,
-    },
-    highestOfTheDay: {
-        type: Number,
-        required: true,
-    },
-    url: {
-        type: String,
-        required : true,
-    }
+    //currentPrice: {
+    //    type: Number,
+    //    required: true,
+    //    lowercase: true,
+    //},
+    //openingPrice: {
+    //    type: Number,
+    //    required: true
+    //},
+    //lowestOfTheDay: {
+    //    type: Number,
+    //    required: true,
+    //},
+    //highestOfTheDay: {
+    //    type: Number,
+    //    required: true,
+    //},
+    //url: {
+    //    type: String,
+    //    required : true,
+    //}
 }, {
     timestamps: true,
 });
