@@ -1,18 +1,39 @@
 import React, { useState } from "react";
 import "./assets/style.css";
 
-function Login(props) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+class Login extends Component {
 
-  function validateForm() {
+  constructor(){
+    super();
+    this.state = {
+      
+      email: '',
+      password: ''
+    };
+    
+  }
+  state = {
+    
+    email: '',
+    password: '',
+  }
+
+  validateForm() {
     return email.length > 0 && password.length > 0;
   }
 
-  function handleSubmit(event) {
-    event.preventDefault();
-  }
-
+  handleSubmit(event) {
+    event.preventDefault()
+    console.log(this.state)
+    axios.post('http://localhost:6200/users/login',this.state)
+    .then(response=>{
+    console.log(response)
+    })
+    .catch(error =>{
+    console.log(error)
+    })
+    }
+  render(){
   return (
     <div className="wrapper">
     <div className="form-wrapper">
@@ -33,5 +54,5 @@ function Login(props) {
     </div>
     </div>
   );
-}
+}}
 export default Login;
