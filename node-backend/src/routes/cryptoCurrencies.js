@@ -21,7 +21,7 @@ router.route('/symbol/:cryptoId').get(verifié,async (req, res) =>{
     try {
         let response = await axios.get(host + "/currencies/ticker?key=" + process.env.NOMICS_KEY + "&ids="+ id +"&interval=1d,30d" + "&convert=EUR")
             .then(response => res.json(response.data));
-        } catch(err) {
+    } catch(err) {
         res.status(400).send(err);
     }
 
