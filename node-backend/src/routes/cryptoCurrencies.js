@@ -22,58 +22,87 @@ router.route('/').get(async (req, res) =>{
         requete.push(crypto.symbol);
     }
     let resultat = [];
-    try {
-        for( let i = 0; i < requete.length; i++){   
+    for( let i = 0; i < requete.length; i++){   
+        let elem = {}
+        let response_nomics = {};
+        try {
+            response_nomics = await axios.get(nomics + "/currencies/ticker?key="+ process.env.NOMICS_KEY + "&ids=" + requete[i] + "&interval=1h&convert=EUR");
             let response = await axios.get(host + "/ohlcv/"+ requete[i] + "/EUR/latest?period_id=1MIN&limit=1", {headers : {'X-CoinAPI-Key': process.env.API_KEY}})
-            //res.send(nomics + "/currencies/ticker?key="+ process.env.NOMICS_KEY + "&ids=" + requete[i] + "&interval=1h&convert=EUR");
-            let response_nomics = await axios.get(nomics + "/currencies/ticker?key="+ process.env.NOMICS_KEY + "&ids=" + requete[i] + "&interval=1h&convert=EUR")
-            //.then(response_nomics => console.log(response_nomics));
-            let elem =
+            elem =
                 {
-                    "Cryptommonaie" : response_nomics.data[0].name,
-                    "Id": requete[i],
-                    "Prix en " : "EUR",
-                    "URL" : response_nomics.data[0].logo_url,
-                    "Prix": parseFloat(response_nomics.data[0].price),
-                    "Prix à l'Ouverture" : response.data[0].price_open,
-                    "Prix le plus Haut": response.data[0].price_high,
-                    "Prix à la Fermeture": response.data[0].price_close,
-                    "Prix le plus bas": response.data[0].price_low,
-                };
+                "Cryptommonaie" : response_nomics.data[0].name,
+                "Id": requete[i],
+                "Prix en " : "EUR",
+                "URL" : response_nomics.data[0].logo_url,
+                "Prix": parseFloat(response_nomics.data[0].price),
+                "Prix à l'Ouverture" : response.data[0].price_open,
+                "Prix le plus Haut": response.data[0].price_high,                        
+                "Prix à la Fermeture": response.data[0].price_close,
+                "Prix le plus bas": response.data[0].price_low,
+            };
             resultat.push(elem);
+            }catch (err) {
+            
+            }finally {
+                elem =
+                {
+                "Cryptommonaie" : response_nomics.data[0].name,
+                "Id": requete[i],
+                "Prix en " : "EUR",
+                "URL" : response_nomics.data[0].logo_url,
+                "Prix": parseFloat(response_nomics.data[0].price),
+                "Prix à l'Ouverture" : 0,
+                "Prix le plus Haut": parseFloat(response_nomics.data[0].high),
+                "Prix à la Fermeture": 0,
+                "Prix le plus bas": 0,
+                };
+                resultat.push(elem);
+            }
         }
-        res.json(resultat);
-    } catch(err) {
-        res.status(400).send(err);
-    }
+
+    res.json(resultat);
+    
 })
 
 // Get By Id Secure Route
 router.route('/symbol/:cryptoId').get(verifié,async (req, res) =>{
     const id = req.params.cryptoId;
     const currency = req.user.user.currency;
-    
-
+    let response_nomics = {}; 
     try {
-        let response_nomics = await axios.get(nomics + "/currencies/ticker?key="+ process.env.NOMICS_KEY + "&ids=" + id + "&interval=1h&convert=EUR")
+        response_nomics = await axios.get(nomics + "/currencies/ticker?key="+ process.env.NOMICS_KEY + "&ids=" + id + "&interval=1h&convert=EUR")
         let response = await axios.get(host + "/ohlcv/" + id + "/" + currency +"/latest?period_id=1MIN&limit=1", {headers : {'X-CoinAPI-Key': process.env.API_KEY}})
-            .then(response => res.json(
+        let elem = 
             {
-                "Cryptommonaie" : response_nomics.data[0].name,
-                "Id" : id,
-                "URL" : response_nomics.data[0].logo_url,
-                "Prix": parseFloat(response_nomics.data[0].price),
-                "Prix en " : currency,
-                "Date" : response.data[0].time_period_end,
-                "Prix à l'Ouverture" : response.data[0].price_open,
-                "Prix le plus Haut": response.data[0].price_high,
-                "Prix à la Fermeture": response.data[0].price_close,
-                "Prix le plus bas": response.data[0].price_low,
-            }));
-        } catch(err) {
-        res.status(400).send(err);
-        }
-    });
+            "Cryptommonaie" : response_nomics.data[0].name,                    
+            "Id": id,
+            "Prix en " : currency,
+            "URL" : response_nomics.data[0].logo_url,
+            "Prix": parseFloat(response_nomics.data[0].price),
+            "Prix à l'Ouverture" : response.data[0].price_open,
+            "Prix le plus Haut": response.data[0].price_high,                 
+            "Prix à la Fermeture": response.data[0].price_close,                   
+            "Prix le plus bas": response.data[0].price_low,
+        };
+    res.json(elem);
+    }catch(err) {
+    }finally {
+        let elem =
+            {
+            "Cryptommonaie" : response_nomics.data[0].name,
+            "Id": id,
+            "Prix en " : currency,
+            "URL" : response_nomics.data[0].logo_url,
+            "Prix": parseFloat(response_nomics.data[0].price),
+            "Prix à l'Ouverture" : 0,
+            "Prix le plus Haut": parseFloat(response_nomics.data[0].high),
+            "Prix à la Fermeture": 0,
+            "Prix le plus bas": 0,
+            };
+        res.json(elem);
+    }
+
+});
 
 // Get By Id and period Secure Route
 router.route('/symbol/:cryptoId/period/:period').get(verifié,async (req, res) =>{
