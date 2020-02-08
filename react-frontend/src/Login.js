@@ -13,8 +13,7 @@ class Login extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-
-
+  
   handleChange(e){
     let target = e.target;
     let value = target.value;
@@ -22,7 +21,6 @@ class Login extends Component {
     this.setState({
       [name]: value
     });
-
   }
 
   handleSubmit(event) {
@@ -30,14 +28,12 @@ class Login extends Component {
     console.log(this.state)
     axios.post('http://localhost:6200/users/login',this.state)
     .then(response=>{
-
     console.log(response.data)
     })
    .catch(error =>{
    console.log(error)
     })
   }
-
   render(){
   return (
     <div className="wrapper">
