@@ -32,18 +32,24 @@ class Register extends Component {
     });
   }
   handleSubmit(e){
-    if (this.state.password !== this.state.ConfirmPassword) {
-    alert("Passwords don't match");
-    } else {
+   
     // make API call
-    e.preventDefault();
-    this.getWPnonce();
-    }
+    e.preventDefault()
+    console.log(this.state)
+    axios.post('http://localhost:6200/users/register',this.state)
+    .then(response=>{
+      console.log(response)
+    })
+    .catch(error =>{
+      console.log(error)
+    })
+  
+    
     
     }
 
   insertData(nonce){
-    axios.get('http://wp.ruvictor.com/api/user/register/?username='+this.state.username+'&email='+this.state.email+'&nonce=' + nonce + '&display_name='+this.state.display_name+'&insecure=cool')
+    axios.get('http://wp.ruvictor.com/api/user/register/?username='+this.state.username+'&email='+this.state.email+'&password='+this.state.password)
     .then(res => {
       ///const data = res.data;
       ///console.log(data);
@@ -78,11 +84,11 @@ class Register extends Component {
           </div>
           <div className="password">
           <label htmlFor="exampleInputPassword1">Password</label>
-          <input name="display_name" type="password" value={this.state.password} onChange={this.handleChange}  className="form-control" id="exampleInputPassword1" placeholder="Password" />
+          <input name="password" type="password" value={this.state.password} onChange={this.handleChange}  className="form-control" id="exampleInputPassword1" placeholder="Password" />
           </div>
           <div className="password">
           <label htmlFor="exampleInputPassword2">Confirm your password</label>
-          <input name="display_name" type="password" onChange={this.handleConfirmPassword}  className="form-control" id="exampleInputPassword2" placeholder="Password" />
+          <input name="display_name2" type="password" onChange={this.handleConfirmPassword}  className="form-control" id="exampleInputPassword2" placeholder="Password" />
           </div>
           <div className="createAccount">
             <button type="submit" className="btn btn-primary">Submit</button>
@@ -95,3 +101,7 @@ class Register extends Component {
     );
   }
 }
+<<<<<<< HEAD
+=======
+export default Register;
+>>>>>>> Dev
