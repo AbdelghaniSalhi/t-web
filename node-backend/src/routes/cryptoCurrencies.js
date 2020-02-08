@@ -3,6 +3,7 @@ let CryptoCurrency = require ('../models/crypto.models');
 const jwt = require('jsonwebtoken');
 const verifié = require ('./verifierToken');
 const host = "https://rest.coinapi.io/v1";
+const nomics = "https://api.nomics.com/v1";
 const axios = require('axios');
 var resultat = [];
 
@@ -24,11 +25,16 @@ router.route('/').get(async (req, res) =>{
     try {
         for( let i = 0; i < requete.length; i++){   
             let response = await axios.get(host + "/ohlcv/"+ requete[i] + "/EUR/latest?period_id=1MIN&limit=1", {headers : {'X-CoinAPI-Key': process.env.API_KEY}})
+            //res.send(nomics + "/currencies/ticker?key="+ process.env.NOMICS_KEY + "&ids=" + requete[i] + "&interval=1h&convert=EUR");
+            let response_nomics = await axios.get(nomics + "/currencies/ticker?key="+ process.env.NOMICS_KEY + "&ids=" + requete[i] + "&interval=1h&convert=EUR")
+            //.then(response_nomics => console.log(response_nomics));
             let elem =
                 {
-                    "Cryptommonaie" : requete[i],
+                    "Cryptommonaie" : response_nomics.data[0].name,
+                    "Id": requete[i],
                     "Prix en " : "EUR",
-                    "Date" : response.data[0].time_period_end,
+                    "URL" : response_nomics.data[0].logo_url,
+                    "Prix": parseFloat(response_nomics.data[0].price),
                     "Prix à l'Ouverture" : response.data[0].price_open,
                     "Prix le plus Haut": response.data[0].price_high,
                     "Prix à la Fermeture": response.data[0].price_close,
@@ -49,10 +55,14 @@ router.route('/symbol/:cryptoId').get(verifié,async (req, res) =>{
     
 
     try {
+        let response_nomics = await axios.get(nomics + "/currencies/ticker?key="+ process.env.NOMICS_KEY + "&ids=" + id + "&interval=1h&convert=EUR")
         let response = await axios.get(host + "/ohlcv/" + id + "/" + currency +"/latest?period_id=1MIN&limit=1", {headers : {'X-CoinAPI-Key': process.env.API_KEY}})
             .then(response => res.json(
             {
-                "Cryptommonaie" : id,
+                "Cryptommonaie" : response_nomics.data[0].name,
+                "Id" : id,
+                "URL" : response_nomics.data[0].logo_url,
+                "Prix": parseFloat(response_nomics.data[0].price),
                 "Prix en " : currency,
                 "Date" : response.data[0].time_period_end,
                 "Prix à l'Ouverture" : response.data[0].price_open,
@@ -87,14 +97,17 @@ router.route('/symbol/:cryptoId/period/:period').get(verifié,async (req, res) =
         try {
             
             //res.send(host + "/ohlcv/" + id + "/" + currency +"/latest?period_id=1"+ p +"&limit=" + l);
+            let response_nomics = await axios.get(nomics + "/currencies/ticker?key="+ process.env.NOMICS_KEY + "&ids=" + id + "&interval=1h&convert=EUR")
             let response = await axios.get(host + "/ohlcv/" + id + "/" + currency +"/latest?period_id=1"+ p +"&limit=" + l, {headers : {'X-CoinAPI-Key': process.env.API_KEY}});
             //res.send(response.data)
             let result = [];
             for( let i = 0; i < response.data.length; i++){   
                 let elem =
                     {
-                        "Cryptommonaie" : id,
-                        "Prix en " : "EUR",
+                        "Cryptommonaie" : response_nomics.data[0].name,
+                        "Id" : id,
+                        "URL" : response_nomics.data[0].logo_url,
+                        "Prix en " : currency,
                         "Date" : response.data[i].time_period_end,
                         "Prix à l'Ouverture" : response.data[i].price_open,
                         "Prix le plus Haut": response.data[i].price_high,
