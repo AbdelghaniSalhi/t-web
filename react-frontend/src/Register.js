@@ -101,7 +101,6 @@ class Register extends Component {
     );
   }
 }
-<<<<<<< HEAD
-=======
+
+
 export default Register;
->>>>>>> Dev
