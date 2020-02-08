@@ -177,7 +177,7 @@ router.post('/',verifié,async (req,res) => {
 router.route('/:cryptoId').delete(verifié, async (req,res) => {
     if (req.user.user.role == "Administrateur") {
         const id = req.params.cryptoId;
-        const deleted = await CryptoCurrency.findByIdAndDelete(id);
+        const deleted = await CryptoCurrency.findOneAndDelete({"symbol" : id });
         res.send(deleted);
 
     } else {
