@@ -2,69 +2,158 @@ const router = require('express').Router();
 let CryptoCurrency = require ('../models/crypto.models');
 const jwt = require('jsonwebtoken');
 const verifié = require ('./verifierToken');
-const host = "https://api.nomics.com/v1";
+const host = "https://rest.coinapi.io/v1";
+const nomics = "https://api.nomics.com/v1";
 const axios = require('axios');
-const https = require('https');
+var resultat = [];
+
+// Liste des Cryptomonnaies en base
+router.route('/liste').get((req, res) =>{
+    CryptoCurrency.find()
+        .then(cryptos => res.json(cryptos))
+        .catch(err => res.status(400).json('Error : ' + err));
+});
 
 // Get all CryptoCurrencies
 router.route('/').get(async (req, res) =>{
-    let requete = "";
+    let requete = [];
     const cursor = CryptoCurrency.find().cursor();
     for (let crypto = await cursor.next(); crypto != null; crypto = await cursor.next()) {
-        requete += crypto.symbol + ',';
+        requete.push(crypto.symbol);
     }
-    requete = requete.substring(0, requete.length - 1);
+    let resultat = [];
+    for( let i = 0; i < requete.length; i++){   
+        let elem = {}
+        let response_nomics = {};
+        try {
+            response_nomics = await axios.get(nomics + "/currencies/ticker?key="+ process.env.NOMICS_KEY + "&ids=" + requete[i] + "&interval=1h&convert=EUR");
+            let response = await axios.get(host + "/ohlcv/"+ requete[i] + "/EUR/latest?period_id=1MIN&limit=1", {headers : {'X-CoinAPI-Key': process.env.API_KEY}})
+            elem =
+                {
+                "Cryptommonaie" : response_nomics.data[0].name,
+                "Id": requete[i],
+                "Prix en " : "EUR",
+                "URL" : response_nomics.data[0].logo_url,
+                "Prix": parseFloat(response_nomics.data[0].price),
+                "Prix à l'Ouverture" : response.data[0].price_open,
+                "Prix le plus Haut": response.data[0].price_high,                        
+                "Prix à la Fermeture": response.data[0].price_close,
+                "Prix le plus bas": response.data[0].price_low,
+            };
+            resultat.push(elem);
+            }catch (err) {
+            
+            }finally {
+                elem =
+                {
+                "Cryptommonaie" : response_nomics.data[0].name,
+                "Id": requete[i],
+                "Prix en " : "EUR",
+                "URL" : response_nomics.data[0].logo_url,
+                "Prix": parseFloat(response_nomics.data[0].price),
+                "Prix à l'Ouverture" : 0,
+                "Prix le plus Haut": parseFloat(response_nomics.data[0].high),
+                "Prix à la Fermeture": 0,
+                "Prix le plus bas": 0,
+                };
+                resultat.push(elem);
+            }
+        }
+
+    res.json(resultat);
     
-    
-    //const https = require('https');
-
-    //var options = {
-    //    "method": "GET",
-    //    "hostname": "rest.coinapi.io",
-    //    "path": "/v1/assets",
-    //    "headers": {'X-CoinAPI-Key': process.'73034021-THIS-IS-SAMPLE-KEY'env.API_KEY}
-    //};
-
-    //var request = https.request(options, function (response) {
-    //    var chunks = [];
-    //    response.on("data", function (chunk) {
-    //        chunks.push(chunk);
-    //    });
-    //});
-
-    //request.end();
-
-    
-    try {
-        let response = await axios.get(host + "/currencies/ticker?key=" + process.env.NOMICS_KEY + "&ids=" + requete + "&convert=EUR")
-            .then(response => res.json(response.data));
-    } catch(err) {
-        res.status(400).send(err);
-    }
-});
+})
 
 // Get By Id Secure Route
 router.route('/symbol/:cryptoId').get(verifié,async (req, res) =>{
     const id = req.params.cryptoId;
+    const currency = req.user.user.currency;
+    let response_nomics = {}; 
     try {
-        let response = await axios.get(host + "/currencies/ticker?key=" + process.env.NOMICS_KEY + "&ids="+ id +"&interval=1d,30d" + "&convert=EUR")
-            .then(response => res.json(response.data));
-    } catch(err) {
-        res.status(400).send(err);
+        response_nomics = await axios.get(nomics + "/currencies/ticker?key="+ process.env.NOMICS_KEY + "&ids=" + id + "&interval=1h&convert=EUR")
+        let response = await axios.get(host + "/ohlcv/" + id + "/" + currency +"/latest?period_id=1MIN&limit=1", {headers : {'X-CoinAPI-Key': process.env.API_KEY}})
+        let elem = 
+            {
+            "Cryptommonaie" : response_nomics.data[0].name,                    
+            "Id": id,
+            "Prix en " : currency,
+            "URL" : response_nomics.data[0].logo_url,
+            "Prix": parseFloat(response_nomics.data[0].price),
+            "Prix à l'Ouverture" : response.data[0].price_open,
+            "Prix le plus Haut": response.data[0].price_high,                 
+            "Prix à la Fermeture": response.data[0].price_close,                   
+            "Prix le plus bas": response.data[0].price_low,
+        };
+    res.json(elem);
+    }catch(err) {
+    }finally {
+        let elem =
+            {
+            "Cryptommonaie" : response_nomics.data[0].name,
+            "Id": id,
+            "Prix en " : currency,
+            "URL" : response_nomics.data[0].logo_url,
+            "Prix": parseFloat(response_nomics.data[0].price),
+            "Prix à l'Ouverture" : 0,
+            "Prix le plus Haut": parseFloat(response_nomics.data[0].high),
+            "Prix à la Fermeture": 0,
+            "Prix le plus bas": 0,
+            };
+        res.json(elem);
     }
 
-    });
-
-// Get By Symbol Secure Route
-router.route('/:cryptoSymbol').get(verifié, (req, res) =>{
-    const symbol = req.params.cryptoSymbol;
-
-    CryptoCurrency.findOne({symbol : symbol})
-        .then(crypto => res.json(crypto))
-        .catch(err => res.status(400).json('Error : ' + err));
 });
 
+// Get By Id and period Secure Route
+router.route('/symbol/:cryptoId/period/:period').get(verifié,async (req, res) =>{
+    const id = req.params.cryptoId;
+    const currency = req.user.user.currency;
+    var period = req.params.period;
 
+    if (period == "Jours" || "Heures" || "Minutes") {
+        if (period == "Jours") {
+            p = "DAY";
+            l = "60";
+        }
+        if (period ==  "Heures") {
+            p = "HRS";
+            l = "48";
+        }    
+        if (period == "Minutes") {
+            p = "MIN";
+            l = "120";
+        } 
+        try {
+            
+            //res.send(host + "/ohlcv/" + id + "/" + currency +"/latest?period_id=1"+ p +"&limit=" + l);
+            let response_nomics = await axios.get(nomics + "/currencies/ticker?key="+ process.env.NOMICS_KEY + "&ids=" + id + "&interval=1h&convert=EUR")
+            let response = await axios.get(host + "/ohlcv/" + id + "/" + currency +"/latest?period_id=1"+ p +"&limit=" + l, {headers : {'X-CoinAPI-Key': process.env.API_KEY}});
+            //res.send(response.data)
+            let result = [];
+            for( let i = 0; i < response.data.length; i++){   
+                let elem =
+                    {
+                        "Cryptommonaie" : response_nomics.data[0].name,
+                        "Id" : id,
+                        "URL" : response_nomics.data[0].logo_url,
+                        "Prix en " : currency,
+                        "Date" : response.data[i].time_period_end,
+                        "Prix à l'Ouverture" : response.data[i].price_open,
+                        "Prix le plus Haut": response.data[i].price_high,
+                        "Prix à la Fermeture": response.data[i].price_close,
+                        "Prix le plus bas": response.data[i].price_low,
+                        "Nombre de transactions": response.data[i].trades_count
+                    };
+                result.push(elem);
+            }
+            res.json(result);
+        } catch(err) {
+            res.status(400).send(err);
+        }
+    } else {
+        res.send(" Les periodes doivent etre : Jours, Minutes, Heures")
+    }
+});
 
 // Post Secure route
 router.post('/',verifié,async (req,res) => {
@@ -73,11 +162,6 @@ router.post('/',verifié,async (req,res) => {
         const cryptoToPost = new CryptoCurrency({
             name: req.body.name,
             symbol: req.body.symbol,
-            //currentPrice: req.body.currentPrice,
-            //openingPrice: req.body.openingPrice,
-            //lowestOfTheDay: req.body.lowestOfTheDay,
-            //highestOfTheDay : req.body.highestOfTheDay,
-            //url : req.body.url
         });
         try{
             const savedCrypto = await cryptoToPost.save();
@@ -97,7 +181,7 @@ router.route('/:cryptoId').delete(verifié, async (req,res) => {
         res.send(deleted);
 
     } else {
-        res.status(401).send("Seul un administrateur peut ajouter une cryptomonnaie");
+        res.status(401).send("Seul un administrateur peut supprimer une cryptomonnaie");
     }
 
 });
