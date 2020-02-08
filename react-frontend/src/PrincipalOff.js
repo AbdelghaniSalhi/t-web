@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import "./assets/style.css";
 import axios from 'axios';
-
-import Card from 'react-bootstrap/Card';
-import CardColumns from 'react-bootstrap/CardColumns'
+import {Table } from 'react-bootstrap';
 import Nav from 'react-bootstrap/Nav';
 
 class PrincipalOff extends Component {
@@ -24,23 +22,19 @@ class PrincipalOff extends Component {
        console.log(error)
        })
        }
+       
        render(){
        const { posts}=this.state
        const divStyle = {
-
        
-       
-        width: '400px',
         height :'100px',
-      
-        
       }
        return(
            <div className="wrapper">
                <div className="f-wrapper"> 
                 <Nav className="justify-content-end" activeKey="/">
                         <Nav.Item>
-                        <Nav.Link href="/">Principal</Nav.Link>
+                        <Nav.Link href="/PrincipalOff2">Principal</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
                         <Nav.Link href="/Login">Login</Nav.Link>
@@ -51,32 +45,43 @@ class PrincipalOff extends Component {
                         <Nav.Item>
                         
                         </Nav.Item>
-                </Nav>
-                <p></p>
-                <h1>List of Crypto-monnais : </h1>
-                <p></p>
-                <p></p>
-                <CardColumns>
-                {
-                    posts.length ?
-                   
-                    posts.map(post=><Card key={post.id}  className="p-3">
-                        <Card.Img variant="top"  style={ divStyle}  src= {post.logo_url}/>
-                        <Card.Body>
-                        <Card.Title>{post.name}</Card.Title>
-                        <Card.Text>
-                           <p> Current Price : {post.price}</p>
-                           <p> Opening Price : </p>
-                           <p> Lowest Price of the day :</p>
-                           <p> Highest Price of the day : </p>
-                        </Card.Text>
-                        </Card.Body>
-                        
-                    </Card>):
-                        null
-                        }
-                        
-                </CardColumns>
+                    </Nav>
+                    <p></p>
+                    <h1>List of Cryptocurrencies </h1>
+                    <p></p>
+                    <p></p>
+                
+                <Table striped bordered hover size="sm">
+                        <thead>
+                            <tr>
+                            
+                            <th>Name</th>
+                            <th>Current Price </th>
+                            <th>Opening Price</th>
+                            <th>Lowest Price of the day</th>
+                            <th>Highest Price of the day</th>
+                            <th>Url of Image</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {
+                        posts.length ?
+                    
+                            posts.map(post=> <tr key={post.id}>
+                            
+                            <td>{post.Cryptommonaie}</td>
+                            <td>{post.Prix}</td>
+                            <td>{post["Prix à l'Ouverture"]} </td>
+                            <td>{post["Prix le plus bas"]}</td>
+                            <td>{post["Prix le plus Haut"]}</td>
+                            <td><img src={post.URL}alt="..." style={ divStyle}/></td>
+                            </tr>):
+                            null
+                            }
+
+                            
+                        </tbody>
+                    </Table>
                 </div>
            </div>
 
