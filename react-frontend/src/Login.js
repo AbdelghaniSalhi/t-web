@@ -13,11 +13,7 @@ class Login extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-  state = {
-    email: '',
-    password: '',
-  }
-
+  
   handleChange(e){
     let target = e.target;
     let value = target.value;
@@ -61,4 +57,5 @@ class Login extends Component {
   );
 }
 }
+
 export default Login;
