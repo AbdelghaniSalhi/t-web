@@ -62,13 +62,7 @@ class PrinOn extends Component {
                             <th>Lowest Price of the day</th>
                             <th>Highest Price of the day</th>
                             <th>Image</th>
-                            <th>
-                            <ButtonGroup aria-label="Basic example">
-                                <Button variant="secondary">daily</Button> 
-                                <Button variant="secondary">hourly</Button>
-                                <Button variant="secondary">minute</Button>
-                            </ButtonGroup>
-                            </th>
+                            <th>Period</th>
                             </tr>
                         </thead>
                         <tbody>

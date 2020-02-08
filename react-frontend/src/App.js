@@ -5,7 +5,7 @@ import  Register from '../src/Register';
 import PrincipalOff2 from './PrincipalOff2';
 
 import PrinOn from './PrinOn';
-
+import PrinOff from './PrinOff';
 import Admin from './Admin';
 
 
@@ -16,8 +16,9 @@ class App extends Component {
         <Router>
          
             <Switch>
-            <Route exact path="/" component={PrinOn} />
+            <Route exact path="/" component={PrinOff} />
               <Route  path="/PrincipalOff2" component={PrincipalOff2} />
+              <Route  path="/PrinOn" component={PrinOn} />
               <Route path="/Register" component={Register} />
               <Route path="/Login" component={Login} />
               <Route path="/Admin" component={Admin} />

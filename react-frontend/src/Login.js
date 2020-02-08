@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./assets/style.css";
 import axios from 'axios';
 
+
 class Login extends Component {
 
   constructor(){
@@ -38,13 +39,7 @@ class Login extends Component {
    .catch(error =>{
    console.log(error)
     })
-  function fonction() {
-    if (sessionStorage.getItem("status") !== 200) {
-
-    } else {
-      window.location.href="/PrincipalOff2";
-    }
-  }
+  
 
     
   }
@@ -63,7 +58,7 @@ class Login extends Component {
           <input name="password" type="password" value={this.state.password} onChange={this.handleChange}  className="form-control" id="exampleInputPassword1" placeholder="Password" />
           </div>
           <div className="createAccount">
-            <button type="submit"  className="btn btn-primary" onClick={fonction} >Submit</button>
+            <button type="submit"  className="btn btn-primary" onClick={() => {window.location.href="/PrinOn"}}>Submit</button>
           </div>
       </form>
     </div>
