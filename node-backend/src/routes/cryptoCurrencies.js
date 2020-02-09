@@ -123,10 +123,10 @@ router.route('/symbol/:cryptoId/period/:period').get(verifié,async (req, res) =
             p = "MIN";
             l = "120";
         } 
+        let response_nomics = {};
         try {
-            
             //res.send(host + "/ohlcv/" + id + "/" + currency +"/latest?period_id=1"+ p +"&limit=" + l);
-            let response_nomics = await axios.get(nomics + "/currencies/ticker?key="+ process.env.NOMICS_KEY + "&ids=" + id + "&interval=1h&convert=EUR")
+            response_nomics = await axios.get(nomics + "/currencies/ticker?key="+ process.env.NOMICS_KEY + "&ids=" + id + "&interval=1h&convert=EUR")
             let response = await axios.get(host + "/ohlcv/" + id + "/" + currency +"/latest?period_id=1"+ p +"&limit=" + l, {headers : {'X-CoinAPI-Key': process.env.API_KEY}});
             //res.send(response.data)
             let result = [];
@@ -134,6 +134,7 @@ router.route('/symbol/:cryptoId/period/:period').get(verifié,async (req, res) =
                 let elem =
                     {
                         "Cryptommonaie" : response_nomics.data[0].name,
+                        "Prix": parseFloat(response_nomics.data[0].price),
                         "Id" : id,
                         "URL" : response_nomics.data[0].logo_url,
                         "Prix en " : currency,
@@ -148,7 +149,27 @@ router.route('/symbol/:cryptoId/period/:period').get(verifié,async (req, res) =
             }
             res.json(result);
         } catch(err) {
-            res.status(400).send(err);
+        }
+        finally {
+            let result = [];
+            for( let i = 0; i < 48; i++){   
+                let elem =
+                    {
+                        "Cryptommonaie" : response_nomics.data[0].name,
+                        "Id" : id,
+                        "URL" : response_nomics.data[0].logo_url,
+                        "Prix en " : currency,
+                        //"Date" : response.data[i].time_period_end,
+                        "Prix":parseFloat(response_nomics.data[0].price),
+                        "Prix à l'Ouverture" : 0,
+                        "Prix le plus Haut": 0,
+                        "Prix à la Fermeture": 0,
+                        "Prix le plus bas": 0,
+                        "Nombre de transactions": 0
+                    };
+                result.push(elem);
+            }
+            res.json(result);
         }
     } else {
         res.send(" Les periodes doivent etre : Jours, Minutes, Heures")

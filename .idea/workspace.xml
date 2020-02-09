@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="71923d7f-8280-46f9-a3f7-548d2f203d1b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/react-frontend/src/Admin.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-frontend/src/Admin.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-frontend/src/Login.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-frontend/src/Login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node-backend/src/routes/cryptoCurrencies.js" beforeDir="false" afterPath="$PROJECT_DIR$/node-backend/src/routes/cryptoCurrencies.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,7 +63,7 @@
       <workItem from="1580902823670" duration="1862000" />
       <workItem from="1581169633374" duration="155000" />
       <workItem from="1581172717521" duration="1181000" />
-      <workItem from="1581177088337" duration="6183000" />
+      <workItem from="1581177088337" duration="6188000" />
     </task>
     <servers />
   </component>
