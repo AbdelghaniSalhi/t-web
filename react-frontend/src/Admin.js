@@ -23,6 +23,7 @@ class Admin extends Component {
        console.log(error)
        })
        }
+
        OnDeleteClick(i){
        
         axios.delete('http://localhost:6200/cryptos/'+i,{headers : {"auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImtleXdvcmRzIjpbImxvdXZpYW4iLCJib3V6ZWxvdWYiLCJsbWFxYXJvdW4iXSwiY3J5cHRvQ3VycmVuY2llcyI6WyJTYXJhIiwiU2FpZCIsIkx5Y2lhIl0sIl9pZCI6IjVlMzgzMDYxMjAxNzljMDAyYWJlOTM2NSIsInVzZXJuYW1lIjoiUmF2YWgiLCJlbWFpbCI6InJhdmFoQGVwaXRlY2guZXUiLCJwYXNzd29yZCI6IiQyYSQxMCR6QVZYRXZja3dXLkNlUG1LeUFFNGNlakZxZDZ4Q1JhMTQvVkZZbi5ZVzBpajBqZ3pMWkVpdSIsImN1cnJlbmN5IjoiRVVSIiwicm9sZSI6IkFkbWluaXN0cmF0ZXVyIiwiY3JlYXRlZEF0IjoiMjAyMC0wMi0wM1QxNDozODoyNS4xNjFaIiwidXBkYXRlZEF0IjoiMjAyMC0wMi0wM1QxNDozODoyNS4xNjFaIiwiX192IjowfSwiaWF0IjoxNTgxMTg5Mjk0LCJleHAiOjE1ODExOTI4OTR9.tZu0FCP_5lM0fy746JhZS4wcMz8AZw17bFQ-ndzG19E"}})
@@ -32,6 +33,8 @@ class Admin extends Component {
         })
        .catch(error =>{
        console.log(error)
+
+      
         })
 
        }
