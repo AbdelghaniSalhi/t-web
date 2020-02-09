@@ -29,7 +29,7 @@ class Login extends Component {
     axios.post('http://localhost:6200/users/login',this.state)
 
     .then (response => {
-      localStorage.setItem("status", JSON.stringify( response.status));
+      //localStorage.setItem("status", JSON.stringify( response.status));
       localStorage.setItem("auth-token", response.data.token);
       if (response.data.role === "Administrateur") {
       window.location.replace('/Admin');

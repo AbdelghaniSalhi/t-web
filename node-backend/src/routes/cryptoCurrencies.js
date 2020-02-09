@@ -209,7 +209,6 @@ router.route('/symbol/:cryptoId/period/:period').get(verifié,async (req, res) =
         } catch(err) {
             erreur = true;
         }finally {
-            
             if (erreur == true) {
                 let result = [];
                 for( let i = 0; i < 48; i++){   
