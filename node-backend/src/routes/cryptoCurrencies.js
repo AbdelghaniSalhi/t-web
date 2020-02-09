@@ -25,6 +25,7 @@ router.route('/').get(async (req, res) =>{
     for( let i = 0; i < requete.length; i++){   
         let elem = {}
         let response_nomics = {};
+        let erreur = false;
         try {
             response_nomics = await axios.get(nomics + "/currencies/ticker?key="+ process.env.NOMICS_KEY + "&ids=" + requete[i] + "&interval=1h&convert=EUR");
             let response = await axios.get(host + "/ohlcv/"+ requete[i] + "/EUR/latest?period_id=1MIN&limit=1", {headers : {'X-CoinAPI-Key': process.env.API_KEY}})
@@ -41,27 +42,27 @@ router.route('/').get(async (req, res) =>{
                 "Prix le plus bas": response.data[0].price_low,
             };
             resultat.push(elem);
-            }catch (err) {
-            
-            }finally {
+        }catch (err) {
+            erreur = true;
+        }finally {
+            if (erreur == true) {
                 elem =
-                {
-                "Cryptommonaie" : response_nomics.data[0].name,
-                "Id": requete[i],
-                "Prix en " : "EUR",
-                "URL" : response_nomics.data[0].logo_url,
-                "Prix": parseFloat(response_nomics.data[0].price),
-                "Prix à l'Ouverture" : 0,
-                "Prix le plus Haut": parseFloat(response_nomics.data[0].high),
-                "Prix à la Fermeture": 0,
-                "Prix le plus bas": 0,
-                };
-                resultat.push(elem);
+                    {
+                    "Cryptommonaie" : response_nomics.data[0].name,
+                    "Id": requete[i],
+                    "Prix en " : "EUR",
+                    "URL" : response_nomics.data[0].logo_url,
+                    "Prix": parseFloat(response_nomics.data[0].price),
+                    "Prix à l'Ouverture" : 0,
+                    "Prix le plus Haut": parseFloat(response_nomics.data[0].high),
+                    "Prix à la Fermeture": 0,
+                    "Prix le plus bas": 0,
+                    };
+            resultat.push(elem);
             }
         }
-
+    }
     res.json(resultat);
-    
 })
 
 // Get By Id Secure Route
@@ -69,6 +70,7 @@ router.route('/symbol/:cryptoId').get(verifié,async (req, res) =>{
     const id = req.params.cryptoId;
     const currency = req.user.user.currency;
     let response_nomics = {}; 
+    let erreur = false;
     try {
         response_nomics = await axios.get(nomics + "/currencies/ticker?key="+ process.env.NOMICS_KEY + "&ids=" + id + "&interval=1h&convert=EUR")
         let response = await axios.get(host + "/ohlcv/" + id + "/" + currency +"/latest?period_id=1MIN&limit=1", {headers : {'X-CoinAPI-Key': process.env.API_KEY}})
@@ -86,20 +88,23 @@ router.route('/symbol/:cryptoId').get(verifié,async (req, res) =>{
         };
     res.json(elem);
     }catch(err) {
+        erreur = true;
     }finally {
-        let elem =
-            {
-            "Cryptommonaie" : response_nomics.data[0].name,
-            "Id": id,
-            "Prix en " : currency,
-            "URL" : response_nomics.data[0].logo_url,
-            "Prix": parseFloat(response_nomics.data[0].price),
-            "Prix à l'Ouverture" : 0,
-            "Prix le plus Haut": parseFloat(response_nomics.data[0].high),
-            "Prix à la Fermeture": 0,
-            "Prix le plus bas": 0,
-            };
-        res.json(elem);
+        if (erreur == true) {
+            let elem =
+                {
+                "Cryptommonaie" : response_nomics.data[0].name,
+                "Id": id,
+                "Prix en " : currency,
+                "URL" : response_nomics.data[0].logo_url,
+                "Prix": parseFloat(response_nomics.data[0].price),
+                "Prix à l'Ouverture" : 0,
+                "Prix le plus Haut": parseFloat(response_nomics.data[0].high),
+                "Prix à la Fermeture": 0,
+                "Prix le plus bas": 0,
+                };
+            res.json(elem);
+        }
     }
 
 });
@@ -124,10 +129,12 @@ router.route('/symbol/:cryptoId/period/:period').get(verifié,async (req, res) =
             l = "120";
         } 
         let response_nomics = {};
+        let response = {};
+        let erreur = false;
         try {
             //res.send(host + "/ohlcv/" + id + "/" + currency +"/latest?period_id=1"+ p +"&limit=" + l);
             response_nomics = await axios.get(nomics + "/currencies/ticker?key="+ process.env.NOMICS_KEY + "&ids=" + id + "&interval=1h&convert=EUR")
-            let response = await axios.get(host + "/ohlcv/" + id + "/" + currency +"/latest?period_id=1"+ p +"&limit=" + l, {headers : {'X-CoinAPI-Key': process.env.API_KEY}});
+            response = await axios.get(host + "/ohlcv/" + id + "/" + currency +"/latest?period_id=1"+ p +"&limit=" + l, {headers : {'X-CoinAPI-Key': process.env.API_KEY}});
             //res.send(response.data)
             let result = [];
             for( let i = 0; i < response.data.length; i++){   
@@ -147,14 +154,16 @@ router.route('/symbol/:cryptoId/period/:period').get(verifié,async (req, res) =
                     };
                 result.push(elem);
             }
-            res.json(result);
+            res.json(response.status);
         } catch(err) {
-        }
-        finally {
-            let result = [];
-            for( let i = 0; i < 48; i++){   
-                let elem =
-                    {
+            erreur = true;
+        }finally {
+            
+            if (erreur == true) {
+                let result = [];
+                for( let i = 0; i < 48; i++){   
+                    let elem =
+                        {
                         "Cryptommonaie" : response_nomics.data[0].name,
                         "Id" : id,
                         "URL" : response_nomics.data[0].logo_url,
@@ -166,10 +175,11 @@ router.route('/symbol/:cryptoId/period/:period').get(verifié,async (req, res) =
                         "Prix à la Fermeture": 0,
                         "Prix le plus bas": 0,
                         "Nombre de transactions": 0
-                    };
-                result.push(elem);
-            }
+                        };
+                    result.push(elem);
+                }
             res.json(result);
+            }
         }
     } else {
         res.send(" Les periodes doivent etre : Jours, Minutes, Heures")
