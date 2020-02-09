@@ -4,6 +4,7 @@ import Login  from '../src/Login';
 import  Register from '../src/Register';
 import PrincipalOff2 from './PrincipalOff2';
 import PrincipalOff from './PrincipalOff';
+import Profil from './Profil';
 
 
 
@@ -18,6 +19,8 @@ class App extends Component {
               <Route  path="/PrincipalOff2" component={PrincipalOff2} />
               <Route path="/Register" component={Register} />
               <Route path="/Login" component={Login} />
+              <Route path="/Profil" component={Profil} />
+
               
             </Switch>
          
