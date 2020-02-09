@@ -25,13 +25,20 @@ class Admin extends Component {
        }
        OnDeleteClick(event){
         event.preventDefault()
-        console.log(this.state)
-        axios.delete('http://localhost:6200/users/login',this.state)
-        .then(response=>{
-        console.log(response.data)
-        })
-       .catch(error =>{
-       console.log(error)
+           axios.delete(
+               'http://localhost:6200/cryptos/',
+               { data: post.id },
+               {
+                   headers: {
+                       "Authorization": localStorage.getItem("access_token"),
+                       "Content-Type": "application/json"
+                   }
+               }
+           ).then(data => {
+               console.log(data)
+
+           }).catch(err => {
+              console.log(err)
         })
 
        }
