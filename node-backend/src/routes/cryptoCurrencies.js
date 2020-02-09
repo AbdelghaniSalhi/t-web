@@ -53,7 +53,7 @@ router.route('/symbol/:cryptoId').get(verifié,async (req, res) =>{
     const id = req.params.cryptoId;
     const currency = req.user.user.currency;
     
-
+    
     try {
         let response_nomics = await axios.get(nomics + "/currencies/ticker?key="+ process.env.NOMICS_KEY + "&ids=" + id + "&interval=1h&convert=EUR")
         let response = await axios.get(host + "/ohlcv/" + id + "/" + currency +"/latest?period_id=1MIN&limit=1", {headers : {'X-CoinAPI-Key': process.env.API_KEY}})
