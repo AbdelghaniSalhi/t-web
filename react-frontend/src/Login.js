@@ -23,31 +23,22 @@ class Login extends Component {
     });
   }
 
-  handleSubmit(event) {
+  async handleSubmit(event) {
     event.preventDefault()
-    console.log(this.state)
     axios.post('http://localhost:6200/users/login',this.state)
-    .then(response=>{
-      sessionStorage.setItem("status", JSON.stringify( response.status));
-      if(response.status !== 200) {
-        
+    .then (response => {
+      localStorage.setItem("status", JSON.stringify( response.status));
+      localStorage.setItem("auth-token", response.data.token);
+      if (response.data.role === "Administrateur") {
+      window.location.replace('/Admin');
       }else {
-        sessionStorage.setItem("auth-token", JSON.stringify(response.data.token));   
-       }
+        window.location.replace('/PrinOn')
+      }
+    }).catch(error => {
+      alert("Email ou mot de passe incorrect");
     })
-   .catch(error =>{
-   console.log(error)
-    })
-  function fonction() {
-    if (sessionStorage.getItem("status") !== 200) {
-
-    } else {
-      window.location.href="/PrincipalOff2";
-    }
   }
 
-    
-  }
   render(){
   return (
     <div className="wrapper">
@@ -63,13 +54,13 @@ class Login extends Component {
           <input name="password" type="password" value={this.state.password} onChange={this.handleChange}  className="form-control" id="exampleInputPassword1" placeholder="Password" />
           </div>
           <div className="createAccount">
-            <button type="submit"  className="btn btn-primary" onClick={fonction} >Submit</button>
+            <button type="submit"  className="btn btn-primary" >Submit</button>
           </div>
       </form>
     </div>
     </div>
   );
 }
-}
+  }
 
 export default Login;
