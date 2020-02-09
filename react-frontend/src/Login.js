@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./assets/style.css";
 import axios from 'axios';
 
+
 class Login extends Component {
 
   constructor(){
@@ -29,15 +30,14 @@ class Login extends Component {
     axios.post('http://localhost:6200/users/login',this.state)
     .then(response=>{
       sessionStorage.setItem("status", JSON.stringify( response.status));
-      if(response.status !== 200) {
-        
-      }else {
+        console.log(response.data.token)
         sessionStorage.setItem("auth-token", JSON.stringify(response.data.token));   
-       }
+       
     })
    .catch(error =>{
    console.log(error)
     })
+
 
 
     
