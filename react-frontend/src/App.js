@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Login  from '../src/Login';
 import  Register from '../src/Register';
-import PrincipalOff2 from './PrincipalOff2';
+
 
 import PrinOn from './PrinOn';
 import CryptoPeriodD from './CryptoPeriodD';
+import CryptoPeriodM from './CryptoPeriodM';
+import CryptoPeriodH from './CryptoPeriodH';
 import PrinOff from './PrinOff';
 import Admin from './Admin';
-
+import AddCrypto from './AddCrypto';
 
 class App extends Component {
   render() {
@@ -18,13 +20,16 @@ class App extends Component {
          
             <Switch>
             <Route exact path="/" component={PrinOff} />
-              <Route  path="/PrincipalOff2" component={PrincipalOff2} />
+             
               <Route  path="/PrinOn" component={PrinOn} />
               <Route path="/Register" component={Register} />
-              <Route  path="/CryptoPeriodD/:id" component={CryptoPeriodD} />
+              <Route  path="/CryptoPeriodD/:Id" component={CryptoPeriodD} />
+              <Route  path="/CryptoPeriodH/:Id" component={CryptoPeriodH} />
+              <Route  path="/CryptoPeriodM/:Id" component={CryptoPeriodM} />
 
               <Route path="/Login" component={Login} />
               <Route path="/Admin" component={Admin} />
+              <Route path="/AddCrypto" component={AddCrypto} />
             </Switch>
          
         </Router>

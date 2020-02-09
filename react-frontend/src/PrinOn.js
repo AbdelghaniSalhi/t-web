@@ -15,7 +15,7 @@ class PrinOn extends Component {
        }
     }
     componentDidMount(){
-       axios.get('http://localhost:6200/cryptos',{headers : {"auth-token": localStorage.getItem("auth-token")}})
+       axios.get('http://localhost:6200/cryptos/logged',{headers : {"auth-token": localStorage.getItem("auth-token")}})
        .then(response =>{
            console.log(response)
            this.setState({posts: response.data})
@@ -42,13 +42,13 @@ class PrinOn extends Component {
                <div className="f-wrapper"> 
                 <Nav className="justify-content-end" activeKey="/">
                         <Nav.Item>
-                        <Nav.Link href="/PrincipalOff2">Principal</Nav.Link>
+                        <Nav.Link href="/PrinOn">Principal</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
                         <Nav.Link href="/Login">Profil</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                        <Nav.Link href="/Register">Logout</Nav.Link>
+                        <Nav.Link href="/">Logout</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
                         
@@ -88,8 +88,9 @@ class PrinOn extends Component {
                             
                             <ButtonGroup aria-label="Basic example">
                             <Button variant="secondary" href={'/CryptoPeriodD/' + post.Id}>daily</Button>
-                                <Button variant="secondary" >hourly</Button>
-                                <Button variant="secondary">minute</Button>
+                            <Button variant="secondary" href={'/CryptoPeriodH/' + post.Id}>hourly</Button>
+                            <Button variant="secondary" href={'/CryptoPeriodM/' + post.Id}>minute</Button>
+                              
                             </ButtonGroup>
                              </td>
                             </tr>):

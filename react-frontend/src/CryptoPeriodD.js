@@ -7,15 +7,19 @@ class CryptoPeriodD extends Component {
  
     constructor(props){
        super(props);
+     
        this.state = {
         posts:[]
     }
     }
     componentDidMount(){
-       axios.get('http://localhost:6200/cryptos/symbol/'+this.props.id+'/period/Jours',{headers : {"auth-token": localStorage.getItem("auth-token")}})
+        
+       axios.get('http://localhost:6200/cryptos/symbol/'+this.props.match.params.Id+'/period/Jours',{headers : {"auth-token": localStorage.getItem("auth-token")}})
        .then(response =>{
+           
            console.log(response)
            this.setState({posts: response.data})
+          console.log( this.setState({posts: response.data}))
        })
        .catch(error=>{
        console.log(error)
@@ -24,28 +28,26 @@ class CryptoPeriodD extends Component {
        
        render(){
        const { posts}=this.state
-       const divStyle = {
-        height :'100px',
-      }
+       
        return(
            <div className="wrapper">
                <div className="f-wrapper"> 
                 <Nav className="justify-content-end" activeKey="/">
                         <Nav.Item>
-                        <Nav.Link href="/PrincipalOff2">Principal</Nav.Link>
+                        <Nav.Link href="/PrinOn">Principal</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
                         <Nav.Link href="/Login">Profil</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                        <Nav.Link href="/Register">Logout</Nav.Link>
+                        <Nav.Link href="/">Logout</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
                         
                         </Nav.Item>
                     </Nav>
                     <p></p>
-                         
+                     <h1> {this.props.match.params.Id}</h1>
                     <p></p>
                     <p></p>
                 
@@ -58,7 +60,7 @@ class CryptoPeriodD extends Component {
                             <th>Opening Price</th>
                             <th>Lowest Price of the day</th>
                             <th>Highest Price of the day</th>
-                            <th>Image</th>
+                            
                             </tr>
                         </thead>
                         <tbody>
@@ -72,9 +74,9 @@ class CryptoPeriodD extends Component {
                             <td>{post["Prix à l'Ouverture"]} </td>
                             <td>{post["Prix le plus bas"]}</td>
                             <td>{post["Prix le plus Haut"]}</td>
-                            <td><img src={post.URL}alt="..." style={ divStyle}/></td>
-                            <td>
-                             </td>
+                            
+                            
+                            
                             </tr>):
                             null
                             }
