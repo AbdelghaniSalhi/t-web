@@ -5,13 +5,15 @@ const verifié = require ('./verifierToken');
 const host = "https://rest.coinapi.io/v1";
 const nomics = "https://api.nomics.com/v1";
 const axios = require('axios');
-var resultat = [];
 
 // Liste des Cryptomonnaies en base
-router.route('/liste').get((req, res) =>{
-    CryptoCurrency.find()
-        .then(cryptos => res.json(cryptos))
-        .catch(err => res.status(400).json('Error : ' + err));
+router.route('/liste').get(async(req, res) =>{
+    let requete = [];
+    const cursor = CryptoCurrency.find().cursor();
+    for (let crypto = await cursor.next(); crypto != null; crypto = await cursor.next()) {
+        requete.push({"symbole" : crypto.symbol, "nom": crypto.name});
+    }
+    res.json(requete)
 });
 
 // Get all CryptoCurrencies
@@ -40,7 +42,7 @@ router.route('/').get(async (req, res) =>{
                 "Prix le plus Haut": response.data[0].price_high,                        
                 "Prix à la Fermeture": response.data[0].price_close,
                 "Prix le plus bas": response.data[0].price_low,
-            };
+                };
             resultat.push(elem);
         }catch (err) {
             erreur = true;
@@ -64,6 +66,55 @@ router.route('/').get(async (req, res) =>{
     }
     res.json(resultat);
 })
+
+
+router.route('/logged').get(verifié,async(req, res) =>{
+    let resultat = [];
+    for( let i = 0; i < req.user.user.cryptoCurrencies.length; i++){   
+        let elem = {}
+        let response_nomics = {};
+        let erreur = false;
+        try {
+            response_nomics = await axios.get(nomics + "/currencies/ticker?key="+ process.env.NOMICS_KEY + "&ids=" + req.user.user.cryptoCurrencies[i] + "&interval=1h&convert=EUR");
+            let response = await axios.get(host + "/ohlcv/"+ req.user.user.cryptoCurrencies[i] + "/EUR/latest?period_id=1MIN&limit=1", {headers : {'X-CoinAPI-Key': process.env.API_KEY}})
+            
+            elem =
+                {
+                "Cryptommonaie" : response_nomics.data[0].name,
+                "Id": req.user.user.cryptoCurrencies[i],
+                "Prix en " : "EUR",
+                "URL" : response_nomics.data[0].logo_url,
+                "Prix": parseFloat(response_nomics.data[0].price),
+                "Prix à l'Ouverture" : response.data[0].price_open,
+                "Prix le plus Haut": response.data[0].price_high,                        
+                "Prix à la Fermeture": response.data[0].price_close,
+                "Prix le plus bas": response.data[0].price_low,
+                }
+            resultat.push(elem);
+        }catch (err) {
+            erreur = true;
+        }finally {
+            if (erreur == true) {
+                //res.send(nomics + "/currencies/ticker?key="+ process.env.NOMICS_KEY + "&ids=" + req.user.user.cryptoCurrencies[i] + "&interval=1h&convert=EUR")
+                elem =
+                    {
+                    "Cryptommonaie" : response_nomics.data[0].name,
+                    "Id": req.user.user.cryptoCurrencies[i],
+                    "Prix en " : "EUR",
+                    "URL" : response_nomics.data[0].logo_url,
+                    "Prix": parseFloat(response_nomics.data[0].price),
+                    "Prix à l'Ouverture" : 0,
+                    "Prix le plus Haut": parseFloat(response_nomics.data[0].high),
+                    "Prix à la Fermeture": 0,
+                    "Prix le plus bas": 0,
+                    }
+            resultat.push(elem);
+            }
+        }
+    }
+    res.json(resultat);
+})
+
 
 // Get By Id Secure Route
 router.route('/symbol/:cryptoId').get(verifié,async (req, res) =>{
@@ -168,7 +219,7 @@ router.route('/symbol/:cryptoId/period/:period').get(verifié,async (req, res) =
                         "Id" : id,
                         "URL" : response_nomics.data[0].logo_url,
                         "Prix en " : currency,
-                        //"Date" : response.data[i].time_period_end,
+                        "Date" : JSON.stringify(i),
                         "Prix":parseFloat(response_nomics.data[0].price),
                         "Prix à l'Ouverture" : 0,
                         "Prix le plus Haut": 0,
