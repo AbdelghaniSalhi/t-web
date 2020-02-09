@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./assets/style.css";
 import axios from 'axios';
 
+
 class Login extends Component {
 
   constructor(){
@@ -22,24 +23,21 @@ class Login extends Component {
       [name]: value
     });
   }
-  // onClick = {() => {window.location.href="/Profil"}}
 
-  handleSubmit(event) {
+  async handleSubmit(event) {
     event.preventDefault()
-    console.log(this.state)
     axios.post('http://localhost:6200/users/login',this.state)
-    .then(response=>{
-      console.log(response.data);
-      //let data = response.payload.data;
-      //if(response.status !== 200) {
-        
-      //}else {
-        //sessionStorage.setItem("auth-token", JSON.stringify(response.data.token)); 
-        //sessionStorage.setItem("auth-token", response.data.token);  
-      // }
-    })
-   .catch(error =>{
-   console.log(error)
+
+    .then (response => {
+      localStorage.setItem("status", JSON.stringify( response.status));
+      localStorage.setItem("auth-token", response.data.token);
+      if (response.data.role === "Administrateur") {
+      window.location.replace('/Admin');
+      }else {
+        window.location.replace('/Profil')
+      }
+    }).catch(error => {
+      alert("Email ou mot de passe incorrect");
     })
   }
 
@@ -58,13 +56,13 @@ class Login extends Component {
           <input name="password" type="password" value={this.state.password} onChange={this.handleChange}  className="form-control" id="exampleInputPassword1" placeholder="Password" />
           </div>
           <div className="createAccount">
-            <button type="submit"  className="btn btn-primary">Submit</button>
+            <button type="submit"  className="btn btn-primary" >Submit</button>
           </div>
       </form>
     </div>
     </div>
   );
 }
-}
+  }
 
 export default Login;

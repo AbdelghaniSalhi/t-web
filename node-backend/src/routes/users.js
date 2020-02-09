@@ -108,7 +108,7 @@ router.post('/login',async (req,res) => {
     // création du token
     const token = jwt.sign({ user }, process.env.TOKEN, { expiresIn: '1h' });
 
-    res.json({"token":token});
+    res.json({"token":token,"role" : user.role});
 });
 
 module.exports = router;
