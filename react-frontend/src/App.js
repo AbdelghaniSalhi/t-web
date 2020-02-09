@@ -5,6 +5,7 @@ import  Register from '../src/Register';
 import PrincipalOff2 from './PrincipalOff2';
 
 import PrinOn from './PrinOn';
+import CryptoPeriodD from './CryptoPeriodD';
 import PrinOff from './PrinOff';
 import Admin from './Admin';
 
@@ -20,6 +21,8 @@ class App extends Component {
               <Route  path="/PrincipalOff2" component={PrincipalOff2} />
               <Route  path="/PrinOn" component={PrinOn} />
               <Route path="/Register" component={Register} />
+              <Route  path="/CryptoPeriodD/:id" component={CryptoPeriodD} />
+
               <Route path="/Login" component={Login} />
               <Route path="/Admin" component={Admin} />
             </Switch>

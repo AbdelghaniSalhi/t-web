@@ -3,19 +3,16 @@ import "./assets/style.css";
 import axios from 'axios';
 import {Table } from 'react-bootstrap';
 import Nav from 'react-bootstrap/Nav';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import Button from 'react-bootstrap/Button';
-
-class PrinOn extends Component {
+class CryptoPeriodD extends Component {
  
     constructor(props){
        super(props);
        this.state = {
-           posts:[]
-       }
+        posts:[]
+    }
     }
     componentDidMount(){
-       axios.get('http://localhost:6200/cryptos',{headers : {"auth-token": localStorage.getItem("auth-token")}})
+       axios.get('http://localhost:6200/cryptos/symbol/'+this.props.id+'/period/Jours',{headers : {"auth-token": localStorage.getItem("auth-token")}})
        .then(response =>{
            console.log(response)
            this.setState({posts: response.data})
@@ -24,19 +21,12 @@ class PrinOn extends Component {
        console.log(error)
        })
        }
-      
-
-       
        
        render(){
        const { posts}=this.state
        const divStyle = {
-       
         height :'100px',
       }
-      
-     
-      
        return(
            <div className="wrapper">
                <div className="f-wrapper"> 
@@ -55,7 +45,7 @@ class PrinOn extends Component {
                         </Nav.Item>
                     </Nav>
                     <p></p>
-                    <h1>List of Cryptocurrencies </h1>
+                         
                     <p></p>
                     <p></p>
                 
@@ -63,34 +53,27 @@ class PrinOn extends Component {
                         <thead>
                             <tr>
                             
-                            <th>Name</th>
+                            <th>Day</th>
                             <th>Current Price </th>
                             <th>Opening Price</th>
                             <th>Lowest Price of the day</th>
                             <th>Highest Price of the day</th>
                             <th>Image</th>
-                            <th>Period</th>
                             </tr>
                         </thead>
                         <tbody>
                         {
                         posts.length ?
                     
-                            posts.map(post=> <tr key={post.Id}>
+                            posts.map(post=> <tr key={post.Date}>
                             
-                            <td>{post.Cryptommonaie}</td>
+                            <td>{post.Date}</td>
                             <td>{post.Prix}</td>
                             <td>{post["Prix à l'Ouverture"]} </td>
                             <td>{post["Prix le plus bas"]}</td>
                             <td>{post["Prix le plus Haut"]}</td>
                             <td><img src={post.URL}alt="..." style={ divStyle}/></td>
                             <td>
-                            
-                            <ButtonGroup aria-label="Basic example">
-                            <Button variant="secondary" href={'/CryptoPeriodD/' + post.Id}>daily</Button>
-                                <Button variant="secondary" >hourly</Button>
-                                <Button variant="secondary">minute</Button>
-                            </ButtonGroup>
                              </td>
                             </tr>):
                             null
@@ -104,4 +87,4 @@ class PrinOn extends Component {
 
        )
        }}
-       export default PrinOn
+       export default CryptoPeriodD
