@@ -32,12 +32,10 @@ router.route('/profile').put(verifié, async (req,res) => {
             role: utilisateur.role,
         };
 
-        
         let salt = await bcrypt.genSalt(10);
         let hashMdp = await bcrypt.hash(newUser.password, salt);
         newUser.password = hashMdp;
         
-
         let savedUser = await User.findByIdAndUpdate({_id: req.user.user._id}, newUser);
         res.json(savedUser);
 
@@ -108,7 +106,7 @@ router.post('/login',async (req,res) => {
     // création du token
     const token = jwt.sign({ user }, process.env.TOKEN, { expiresIn: '1h' });
 
-    res.header('auth-token', token).send(token);
+    res.json({"token":token, "role": user.role});
 });
 
 module.exports = router;
