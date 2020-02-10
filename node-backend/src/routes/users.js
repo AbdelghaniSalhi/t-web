@@ -27,7 +27,6 @@ router.route('/profile').put(verifié, async (req,res) => {
             email : req.body.email ? req.body.email : utilisateur.email,
             password : req.body.password ? req.body.password : utilisateur.password,
             currency : req.body.currency ? req.body.currency : utilisateur.currency,
-            keywords : req.body.keywords ? req.body.keywords : utilisateur.keywords,
             cryptoCurrencies : req.body.cryptoCurrencies ? req.body.cryptoCurrencies : utilisateur.cryptoCurrencies,
             role: utilisateur.role,
         };
@@ -70,7 +69,6 @@ router.post('/register',async (req,res) => {
         email: req.body.email,
         password:hashMdp,
         currency: req.body.currency,
-        keywords: req.body.keywords,
         cryptoCurrencies: req.body.cryptoCurrencies,
         role : role
     });
