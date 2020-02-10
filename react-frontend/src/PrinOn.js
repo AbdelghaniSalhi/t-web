@@ -5,6 +5,7 @@ import {Table } from 'react-bootstrap';
 import Nav from 'react-bootstrap/Nav';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Button from 'react-bootstrap/Button';
+
 class PrinOn extends Component {
  
     constructor(props){
@@ -14,15 +15,18 @@ class PrinOn extends Component {
        }
     }
     componentDidMount(){
-       axios.get('http://localhost:6200/cryptos')
+       axios.get('http://localhost:6200/cryptos/logged',{headers : {"auth-token": localStorage.getItem("auth-token")}})
        .then(response =>{
-           console.log(response)
+            console.log(response)
            this.setState({posts: response.data})
        })
        .catch(error=>{
        console.log(error)
        })
        }
+      
+
+       
        
        render(){
        const { posts}=this.state
@@ -30,18 +34,21 @@ class PrinOn extends Component {
        
         height :'100px',
       }
+      
+     
+      
        return(
-           <div className="wrapper">
+           <div className="www">
                <div className="f-wrapper"> 
                 <Nav className="justify-content-end" activeKey="/">
                         <Nav.Item>
-                        <Nav.Link href="/PrincipalOff2">Principal</Nav.Link>
+                        <Nav.Link href="/PrinOn">Principal</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
                         <Nav.Link href="/Login">Profil</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                        <Nav.Link href="/Register">Logout</Nav.Link>
+                        <Nav.Link href="/">Logout</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
                         
@@ -69,7 +76,7 @@ class PrinOn extends Component {
                         {
                         posts.length ?
                     
-                            posts.map(post=> <tr key={post.id}>
+                            posts.map(post=> <tr key={post.Id}>
                             
                             <td>{post.Cryptommonaie}</td>
                             <td>{post.Prix}</td>
@@ -78,10 +85,12 @@ class PrinOn extends Component {
                             <td>{post["Prix le plus Haut"]}</td>
                             <td><img src={post.URL}alt="..." style={ divStyle}/></td>
                             <td>
+                            
                             <ButtonGroup aria-label="Basic example">
-                                <Button variant="secondary">daily</Button>
-                                <Button variant="secondary">hourly</Button>
-                                <Button variant="secondary">minute</Button>
+                            <Button variant="secondary" href={'/CryptoPeriodD/' + post.Id}>daily</Button>
+                            <Button variant="secondary" href={'/CryptoPeriodH/' + post.Id}>hourly</Button>
+                            <Button variant="secondary" href={'/CryptoPeriodM/' + post.Id}>minute</Button>
+                              
                             </ButtonGroup>
                              </td>
                             </tr>):

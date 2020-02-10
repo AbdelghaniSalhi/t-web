@@ -6,68 +6,64 @@ import Nav from 'react-bootstrap/Nav';
 import Button from 'react-bootstrap/Button';
 
 class Admin extends Component {
- 
+
     constructor(props){
-       super(props);
-       this.state = {
-           posts:[]
-       }
+        super(props);
+        this.state = {
+            posts:[]
+        }
+        this.delete = this.delete.bind(this);
     }
     componentDidMount(){
-       axios.get('http://localhost:6200/cryptos')
-       .then(response =>{
-           console.log(response)
-           this.setState({posts: response.data})
-       })
-       .catch(error=>{
-       console.log(error)
-       })
-       }
+        axios.get('http://localhost:6200/cryptos')
+            .then(response =>{
+                console.log(response)
+                this.setState({posts: response.data})
+            })
+            .catch(error=>{
+                console.log(error)
+            })
+    }
 
-       OnDeleteClick(i){
+    delete(id){
+        axios.delete('http://localhost:6200/cryptos/'+id,{headers : {"auth-token": localStorage.getItem("auth-token")}})
+        window.location.replace('/Admin');
+    }
 
-        axios.delete('http://localhost:6200/cryptos/'+i,{headers : {"auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImtleXdvcmRzIjpbImxvdXZpYW4iLCJib3V6ZWxvdWYiLCJsbWFxYXJvdW4iXSwiY3J5cHRvQ3VycmVuY2llcyI6WyJTYXJhIiwiU2FpZCIsIkx5Y2lhIl0sIl9pZCI6IjVlMzgzMDYxMjAxNzljMDAyYWJlOTM2NSIsInVzZXJuYW1lIjoiUmF2YWgiLCJlbWFpbCI6InJhdmFoQGVwaXRlY2guZXUiLCJwYXNzd29yZCI6IiQyYSQxMCR6QVZYRXZja3dXLkNlUG1LeUFFNGNlakZxZDZ4Q1JhMTQvVkZZbi5ZVzBpajBqZ3pMWkVpdSIsImN1cnJlbmN5IjoiRVVSIiwicm9sZSI6IkFkbWluaXN0cmF0ZXVyIiwiY3JlYXRlZEF0IjoiMjAyMC0wMi0wM1QxNDozODoyNS4xNjFaIiwidXBkYXRlZEF0IjoiMjAyMC0wMi0wM1QxNDozODoyNS4xNjFaIiwiX192IjowfSwiaWF0IjoxNTgxMTg5Mjk0LCJleHAiOjE1ODExOTI4OTR9.tZu0FCP_5lM0fy746JhZS4wcMz8AZw17bFQ-ndzG19E"}})
-        .then(response=>{
-        console.log(response.data)
+    render(){
+        const { posts}=this.state
+        const divStyle = {
+            height :'100px',
 
-        })
-       .catch(error =>{
-       console.log(error)
+        }
 
-
-        })
-
-       }
-       render(){
-       const { posts}=this.state
-       const divStyle = {
-        height :'100px',
-        
-      }
-       return(
-           <div className="wrapper">
-               <div className="f-wrapper"> 
-                <Nav className="justify-content-end" activeKey="/">
+        return(
+            <div className="wrapper">
+                <div className="f-wrapper">
+                    <Nav className="justify-content-end" activeKey="/">
                         <Nav.Item>
-                        <Nav.Link href="/PrincipalOff2">Principal</Nav.Link>
-                        </Nav.Item>
-                       
-                        <Nav.Item>
-                        <Nav.Link href="/Register">Logout</Nav.Link>
+                            <Nav.Link href="/Admin">Principal</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                        
+                            <Nav.Link href="/AddCrypto">Add Crypto</Nav.Link>
+                        </Nav.Item>
+
+                        <Nav.Item>
+                            <Nav.Link href="/">Logout</Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+
                         </Nav.Item>
                     </Nav>
                     <p></p>
                     <h1>List of Cryptocurrencies </h1>
                     <p></p>
                     <p></p>
-                
-                <Table striped bordered hover size="sm">
+
+                    <Table striped bordered hover size="sm">
                         <thead>
-                            <tr>
-                            
+                        <tr>
+
                             <th>Name</th>
                             <th>Current Price </th>
                             <th>Opening Price</th>
@@ -75,31 +71,31 @@ class Admin extends Component {
                             <th>Highest Price of the day</th>
                             <th>Image</th>
                             <th> </th>
-                            </tr>
+                        </tr>
                         </thead>
                         <tbody>
                         {
-                        posts.length ?
-                    
-                            posts.map(post=> <tr key={post.Id}>
-                            
-                            <td>{post.Cryptommonaie}</td>
-                            <td>{post.Prix}</td>
-                            <td>{post["Prix à l'Ouverture"]} </td>
-                            <td>{post["Prix le plus bas"]}</td>
-                            <td>{post["Prix le plus Haut"]}</td>
-                            <td><img src={post.URL}alt="..." style={ divStyle}/></td>
-                            <td><Button onClick={this.OnDeleteClick(post.Id)} variant="secondary">Delete</Button> </td>
-                            </tr>):
-                            null
-                            }
+                            posts.length ?
 
-                            
+                                posts.map(post=> <tr key={post.Id}>
+
+                                    <td>{post.Cryptommonaie}</td>
+                                    <td>{post.Prix}</td>
+                                    <td>{post["Prix à l'Ouverture"]} </td>
+                                    <td>{post["Prix le plus bas"]}</td>
+                                    <td>{post["Prix le plus Haut"]}</td>
+                                    <td><img src={post.URL}alt="..." style={ divStyle}/></td>
+                                    <td><Button onClick={this.delete.bind(this, post.Id)} variant="secondary">Delete</Button> </td>
+                                </tr>):
+                                null
+                        }
+
+
                         </tbody>
                     </Table>
                 </div>
-           </div>
+            </div>
 
-       )
-       }}
-       export default Admin
+        )
+    }}
+export default Admin

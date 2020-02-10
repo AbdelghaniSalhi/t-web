@@ -1,11 +1,12 @@
 .wrapper {
-    height: 100vh;
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     background-color: #258ea6;
+    background-size: 100%;
+
   }
   
   .form-wrapper {
@@ -114,6 +115,18 @@
   .createAccount small {
     color: #999;
     font-weight: lighter;
+  }
+
+  .www {
+    width: 100%;
+    height :100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #258ea6;
+    background-size: 100%;
+
   }
   
   
