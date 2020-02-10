@@ -12,15 +12,16 @@ router.route('/').get((req, res) =>{
         .then(response => {
             let result = [];
             console.log(response.data)
-            let mots = []
             for (let i=0; i<response.data.length; i++){
                 let elem = {
                     id : response.data[i]._id,
                     coins : response.data[i].coins,
                     summary: response.data[i].description,
+                    titre: response.data[i].title,
                     url : response.data[i].url,
                     image : response.data[i].thumbnail,
                     source: response.data[i].source,
+                    date: response.data[i].publishedAt,
                 }
                 result.push(elem);
             }
@@ -29,6 +30,36 @@ router.route('/').get((req, res) =>{
         .catch(err => res.status(400).json('Error : ' + err));
 });
 
+
+// Get By Id Secure Route
+router.route('/logged').get(verifié, async(req, res) =>{
+    let result = [];
+    let elem = {};
+    let locale = {};
+    let response = {};
+    for( let i = 0; i < req.user.user.cryptoCurrencies.length; i++){   
+        try {
+            locale = await CryptoCurrency.findOne({symbol: req.user.user.cryptoCurrencies[i]});
+            let response = await axios.get("https://cryptocontrol.io/api/v1/public/news/coin/"+locale.name.toLowerCase(), {headers :{ "x-api-key": process.env.API_ARTICLES}});
+            for (let i=0; i<response.data.length; i++){
+                elem = {
+                    monnaie:locale.name.toLowerCase(),
+                    id : response.data[i]._id,
+                    summary: response.data[i].description,
+                    titre: response.data[i].title,
+                    url : response.data[i].url,
+                    image : response.data[i].thumbnail,
+                    source: response.data[i].source,
+                    date: response.data[i].publishedAt,
+                }
+                result.push(elem);
+            }    
+        }catch(err){
+            res.send(err);
+        }
+    }
+    res.send(result);
+});
 
 
 module.exports = router; 
