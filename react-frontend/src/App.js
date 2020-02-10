@@ -16,7 +16,7 @@ import ChoixCrypto from './ChoixCrypto';
 import DeleteCrypto from './DeleteCrypto';
 import AjouterCrypto from './AjouterCrypto';
 import Profil from './Profil';
-
+import ArticleOff from './ArticleOff';
 
 class App extends Component {
   render() {
@@ -39,6 +39,9 @@ class App extends Component {
               <Route path="/ChoixCrypto" component={ChoixCrypto} />
               <Route path="/DeleteCrypto" component={DeleteCrypto} />
               <Route path="/AjouterCrypto" component={AjouterCrypto} />
+              <Route  path="/ArticleOff/:id" component={ArticleOff} />
+              
+
 
               <Route path="/Profil" component={Profil} />
             </Switch>

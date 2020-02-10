@@ -30,7 +30,7 @@ class CryptoPeriodD extends Component {
        const { posts}=this.state
        
        return(
-           <div className="wrapper">
+           <div className="www">
                <div className="f-wrapper"> 
                 <Nav className="justify-content-end" activeKey="/">
                         <Nav.Item>
@@ -80,7 +80,7 @@ class CryptoPeriodD extends Component {
                             </tr>):
                             null
                             }
-
+                        
                             
                         </tbody>
                     </Table>
