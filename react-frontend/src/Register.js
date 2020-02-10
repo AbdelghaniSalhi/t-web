@@ -12,7 +12,8 @@ class Register extends Component {
     this.state = {
       username: '',
       email: '',
-      password: ''
+      password: '',
+      currency:''
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -21,6 +22,7 @@ class Register extends Component {
     username: '',
     email: '',
     password: '',
+    currency:'',
   }
 
   handleChange(e){
@@ -90,9 +92,14 @@ class Register extends Component {
           <label htmlFor="exampleInputPassword2">Confirm your password</label>
           <input name="display_name2" type="password" onChange={this.handleConfirmPassword}  className="form-control" id="exampleInputPassword2" placeholder="Password" />
           </div>
+          <div className="currency">
+          <label htmlFor="exampleInputEmail1">currency</label>
+          <input name="currency" value={this.state.currency} onChange={this.handleChange} type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter currency" />
+          </div>
           <div className="createAccount">
             <button type="submit" className="btn btn-primary">Submit</button>
           </div>
+          
         </form>
         <Facebook/>
       </div>
