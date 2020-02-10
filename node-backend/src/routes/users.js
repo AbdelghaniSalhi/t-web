@@ -22,7 +22,11 @@ router.route('/profile').get(verifié ,(req,res) => {
 router.route('/profile').put(verifié, async (req,res) => {
     try{
         let utilisateur = await User.findById(req.user.user._id);
-
+        if (req.body.password){
+            let salt = await bcrypt.genSalt(10);
+            req.body.password = await bcrypt.hash(req.body.password, salt);
+        }
+        
         let newUser = {
             username : req.body.username ? req.body.username : utilisateur.username,
             email : req.body.email ? req.body.email : utilisateur.email,
@@ -31,13 +35,9 @@ router.route('/profile').put(verifié, async (req,res) => {
             cryptoCurrencies : req.body.cryptoCurrencies ? req.body.cryptoCurrencies : utilisateur.cryptoCurrencies,
             role: utilisateur.role,
         };
-
-        let salt = await bcrypt.genSalt(10);
-        let hashMdp = await bcrypt.hash(newUser.password, salt);
-        newUser.password = hashMdp;
-        
+            
         let savedUser = await User.findByIdAndUpdate({_id: req.user.user._id}, newUser);
-        res.json(savedUser);
+        res.json(newUser);
 
     }catch(err) {
         res.status(400).send(err);
