@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "./assets/style.css";
 import axios from 'axios';
 
-let emailU='';
+
 
 class Profil extends Component {
 
@@ -12,7 +12,7 @@ class Profil extends Component {
         this.state = {
             
             currency: '',
-            email: '',
+         
            
             password: '',
             username: ''
@@ -32,7 +32,7 @@ class Profil extends Component {
                 password: '',
                 username: response.data.user.username,
             })
-            emailU = response.data.user.email;
+            
             console.log(this.state.username)
         })
         .catch(error=>{
@@ -55,14 +55,7 @@ class Profil extends Component {
        // console.log(this.state)
         axios.put('http://localhost:6200/users/profile',this.state,{headers : {"auth-token": localStorage.getItem("auth-token")}})
         .then(response=>{
-          console.log(response.data);
-          axios.post('http://localhost:6200/users/login', {email: emailU, password: this.state.password})
-          .then (response => {
-            localStorage.setItem("auth-token",response.data.token);
-            window.location.replace('/PrinOn');
-          }).catch(error =>{
-          console.log(error)
-          })
+            window.location.replace('/Login');
         }).catch(error => {
           alert(error);
         })
@@ -101,10 +94,7 @@ class Profil extends Component {
              <label htmlFor="exampleInputUsername">Username</label>
              <input name="username" value={this.state.username} onChange={this.handleChange} type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username" />
              </div>
-             <div className="email">
-          <label htmlFor="exampleInputEmail">Email address</label>
-          <input name="email" value={this.state.email} onChange={this.handleChange} type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
-          </div>
+            
           <div className="password">
           <label htmlFor="exampleInputPassword1">Password</label>
           <input name="password" type="password" value={this.state.password} onChange={this.handleChange}  className="form-control" id="exampleInputPassword1" placeholder="Password" />

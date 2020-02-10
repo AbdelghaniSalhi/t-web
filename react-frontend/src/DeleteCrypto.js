@@ -62,7 +62,7 @@ class DeleteCrypto extends Component {
         console.log(aEnvoyer);
         axios.put('http://localhost:6200/users/profile', {cryptoCurrencies:aEnvoyer} ,{headers : {"auth-token": localStorage.getItem("auth-token")}})
         .then(response => {
-            alert("Ajouté");
+           
             window.location.replace('/Login');
             
         }).catch(err => {
