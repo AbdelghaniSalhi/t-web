@@ -31,8 +31,10 @@ class AjouterCrypto extends Component {
             }
             axios.get('http://localhost:6200/users/profile',{headers : {"auth-token": localStorage.getItem("auth-token")}})
             .then(response => {
-                for(let i = 0; i<base.length; i++){
-                    utilisateur.push(response.data.user.cryptoCurrencies[i]);
+                for (let j =0 ; j< response.data.user.cryptoCurrencies.length; j++){
+                    utilisateur.push(response.data.user.cryptoCurrencies[j]);
+                }
+                for(let i = 0; i<base.length; i++){   
                     if (!response.data.user.cryptoCurrencies.includes(base[i])){
                         arr.push(base[i])
                     }
@@ -55,8 +57,9 @@ class AjouterCrypto extends Component {
     }
     submit(event){
         event.preventDefault()
-        console.log(arr)
-        aEnvoyer.concat(utilisateur);
+        for (let i =0; i<utilisateur.length; i++){
+            aEnvoyer.push(utilisateur[i]);
+        }
         console.log(aEnvoyer);
         axios.put('http://localhost:6200/users/profile', {cryptoCurrencies:aEnvoyer} ,{headers : {"auth-token": localStorage.getItem("auth-token")}})
         .then(response => {
@@ -91,7 +94,7 @@ class AjouterCrypto extends Component {
                         {
                         posts.length ?
                     
-                        posts.map(post=> <tr key={post}>
+                        posts.map(post=> <tr key={post.symbole}>
                             
                             <td>{post}</td>
                             <td><Button onClick={this.add.bind(this, post)} variant="secondary">Add</Button> </td>
