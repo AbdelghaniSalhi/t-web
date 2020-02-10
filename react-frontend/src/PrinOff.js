@@ -4,7 +4,7 @@ import axios from 'axios';
 import {Table } from 'react-bootstrap';
 import Nav from 'react-bootstrap/Nav';
 
-class PrincipalOff2 extends Component {
+class PrinOff extends Component {
  
     constructor(props){
        super(props);
@@ -60,7 +60,7 @@ class PrincipalOff2 extends Component {
                             <th>Opening Price</th>
                             <th>Lowest Price of the day</th>
                             <th>Highest Price of the day</th>
-                            <th>Url of Image</th>
+                            <th>Image</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -87,4 +87,4 @@ class PrincipalOff2 extends Component {
 
        )
        }}
-       export default PrincipalOff2
+       export default PrinOff

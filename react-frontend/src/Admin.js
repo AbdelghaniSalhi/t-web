@@ -3,8 +3,9 @@ import "./assets/style.css";
 import axios from 'axios';
 import {Table } from 'react-bootstrap';
 import Nav from 'react-bootstrap/Nav';
+import Button from 'react-bootstrap/Button';
 
-class PrincipalOff2 extends Component {
+class Admin extends Component {
  
     constructor(props){
        super(props);
@@ -22,12 +23,30 @@ class PrincipalOff2 extends Component {
        console.log(error)
        })
        }
-       
+       OnDeleteClick(event){
+        event.preventDefault()
+           axios.delete(
+               'http://localhost:6200/cryptos/',
+               { data: post.id },
+               {
+                   headers: {
+                       "Authorization": localStorage.getItem("access_token"),
+                       "Content-Type": "application/json"
+                   }
+               }
+           ).then(data => {
+               console.log(data)
+
+           }).catch(err => {
+              console.log(err)
+        })
+
+       }
        render(){
        const { posts}=this.state
        const divStyle = {
-       
         height :'100px',
+        
       }
        return(
            <div className="wrapper">
@@ -36,11 +55,9 @@ class PrincipalOff2 extends Component {
                         <Nav.Item>
                         <Nav.Link href="/PrincipalOff2">Principal</Nav.Link>
                         </Nav.Item>
+                       
                         <Nav.Item>
-                        <Nav.Link href="/Login">Login</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                        <Nav.Link href="/Register">Register</Nav.Link>
+                        <Nav.Link href="/Register">Logout</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
                         
@@ -60,7 +77,8 @@ class PrincipalOff2 extends Component {
                             <th>Opening Price</th>
                             <th>Lowest Price of the day</th>
                             <th>Highest Price of the day</th>
-                            <th>Url of Image</th>
+                            <th>Image</th>
+                            <th> </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -75,6 +93,7 @@ class PrincipalOff2 extends Component {
                             <td>{post["Prix le plus bas"]}</td>
                             <td>{post["Prix le plus Haut"]}</td>
                             <td><img src={post.URL}alt="..." style={ divStyle}/></td>
+                            <td><Button onClick={this.OnDeleteClick} variant="secondary">Delete</Button> </td>
                             </tr>):
                             null
                             }
@@ -87,4 +106,4 @@ class PrincipalOff2 extends Component {
 
        )
        }}
-       export default PrincipalOff2
+       export default Admin

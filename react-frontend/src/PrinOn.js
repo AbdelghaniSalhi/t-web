@@ -3,8 +3,9 @@ import "./assets/style.css";
 import axios from 'axios';
 import {Table } from 'react-bootstrap';
 import Nav from 'react-bootstrap/Nav';
-
-class PrincipalOff2 extends Component {
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import Button from 'react-bootstrap/Button';
+class PrinOn extends Component {
  
     constructor(props){
        super(props);
@@ -37,10 +38,10 @@ class PrincipalOff2 extends Component {
                         <Nav.Link href="/PrincipalOff2">Principal</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                        <Nav.Link href="/Login">Login</Nav.Link>
+                        <Nav.Link href="/Login">Profil</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                        <Nav.Link href="/Register">Register</Nav.Link>
+                        <Nav.Link href="/Register">Logout</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
                         
@@ -60,7 +61,14 @@ class PrincipalOff2 extends Component {
                             <th>Opening Price</th>
                             <th>Lowest Price of the day</th>
                             <th>Highest Price of the day</th>
-                            <th>Url of Image</th>
+                            <th>Image</th>
+                            <th>
+                            <ButtonGroup aria-label="Basic example">
+                                <Button variant="secondary">daily</Button> 
+                                <Button variant="secondary">hourly</Button>
+                                <Button variant="secondary">minute</Button>
+                            </ButtonGroup>
+                            </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -75,6 +83,13 @@ class PrincipalOff2 extends Component {
                             <td>{post["Prix le plus bas"]}</td>
                             <td>{post["Prix le plus Haut"]}</td>
                             <td><img src={post.URL}alt="..." style={ divStyle}/></td>
+                            <td>
+                            <ButtonGroup aria-label="Basic example">
+                                <Button variant="secondary">daily</Button>
+                                <Button variant="secondary">hourly</Button>
+                                <Button variant="secondary">minute</Button>
+                            </ButtonGroup>
+                             </td>
                             </tr>):
                             null
                             }
@@ -87,4 +102,4 @@ class PrincipalOff2 extends Component {
 
        )
        }}
-       export default PrincipalOff2
+       export default PrinOn

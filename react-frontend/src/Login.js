@@ -28,11 +28,19 @@ class Login extends Component {
     console.log(this.state)
     axios.post('http://localhost:6200/users/login',this.state)
     .then(response=>{
-    console.log(response.data)
+      sessionStorage.setItem("status", JSON.stringify( response.status));
+      if(response.status !== 200) {
+        
+      }else {
+        sessionStorage.setItem("auth-token", JSON.stringify(response.data.token));   
+       }
     })
    .catch(error =>{
    console.log(error)
     })
+
+
+    
   }
   render(){
   return (
@@ -49,7 +57,7 @@ class Login extends Component {
           <input name="password" type="password" value={this.state.password} onChange={this.handleChange}  className="form-control" id="exampleInputPassword1" placeholder="Password" />
           </div>
           <div className="createAccount">
-            <button type="submit"  className="btn btn-primary">Submit</button>
+            <button type="submit"  className="btn btn-primary" >Submit</button>
           </div>
       </form>
     </div>
