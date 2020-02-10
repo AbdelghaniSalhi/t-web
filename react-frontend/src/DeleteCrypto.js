@@ -9,6 +9,8 @@ let arr=[];
 let toDelete=[]
 let aEnvoyer=[];
 
+let emailU = "";
+let passwordU = "";
 
 class DeleteCrypto extends Component {
 
@@ -29,7 +31,8 @@ class DeleteCrypto extends Component {
        .then(response =>{
            this.setState({posts: response.data.user.cryptoCurrencies});
            arr=response.data.user.cryptoCurrencies;
-         
+            emailU = response.data.user.email;
+            passwordU = response.data.user.password;
        })
        .catch(error=>{
        console.log(error)
@@ -62,8 +65,13 @@ class DeleteCrypto extends Component {
         console.log(aEnvoyer);
         axios.put('http://localhost:6200/users/profile', {cryptoCurrencies:aEnvoyer} ,{headers : {"auth-token": localStorage.getItem("auth-token")}})
         .then(response => {
-           
-            window.location.replace('/Login');
+            alert("Supprimé !");
+            axios.post('http://localhost:6200/users/relogin', {email: emailU, password: passwordU})
+            .then(response =>{
+                localStorage.setItem("auth-token", response.data.token);
+                window.location.replace('/PrinOn');
+            })
+            
             
         }).catch(err => {
             alert(err)
