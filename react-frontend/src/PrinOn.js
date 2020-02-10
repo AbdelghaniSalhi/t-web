@@ -17,7 +17,7 @@ class PrinOn extends Component {
     componentDidMount(){
        axios.get('http://localhost:6200/cryptos/logged',{headers : {"auth-token": localStorage.getItem("auth-token")}})
        .then(response =>{
-           console.log(response)
+            console.log(response)
            this.setState({posts: response.data})
        })
        .catch(error=>{

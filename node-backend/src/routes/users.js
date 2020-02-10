@@ -4,6 +4,7 @@ const {registerValidation, loginValidation} = require('../validation')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const verifié = require ('./verifierToken');
+let CryptoCurrency = require ('../models/crypto.models');
 
 router.route('/').get((req, res) =>{
     User.find()
@@ -27,7 +28,6 @@ router.route('/profile').put(verifié, async (req,res) => {
             email : req.body.email ? req.body.email : utilisateur.email,
             password : req.body.password ? req.body.password : utilisateur.password,
             currency : req.body.currency ? req.body.currency : utilisateur.currency,
-            keywords : req.body.keywords ? req.body.keywords : utilisateur.keywords,
             cryptoCurrencies : req.body.cryptoCurrencies ? req.body.cryptoCurrencies : utilisateur.cryptoCurrencies,
             role: utilisateur.role,
         };
@@ -62,18 +62,33 @@ router.post('/register',async (req,res) => {
     
     const mail = req.body.email;
     var role = "Utilisateur";
-    if (mail.includes("epitech.eu")) role = "Administrateur";
-    // User a envoyer a la BDD
+    let userToPost = {};
+    if (mail.includes("epitech.eu")) {
+        role = "Administrateur";   
+        let requete = [];
+        const cursor = CryptoCurrency.find().cursor();
+        for (let crypto = await cursor.next(); crypto != null; crypto = await cursor.next()) {
+            requete.push(crypto.symbol);
+        }
+        userToPost = new User({
+            username: req.body.username,
+            email: req.body.email,
+            password:hashMdp,
+            currency: req.body.currency,
+            cryptoCurrencies: requete,
+            role : role
+            });
+    } else {
+        userToPost = new User({
+            username: req.body.username,
+            email: req.body.email,
+            password:hashMdp,
+            currency: req.body.currency,
+            cryptoCurrencies: [],
+            role : role
+        });
+    }
     
-    const userToPost = new User({
-        username: req.body.username,
-        email: req.body.email,
-        password:hashMdp,
-        currency: req.body.currency,
-        keywords: req.body.keywords,
-        cryptoCurrencies: req.body.cryptoCurrencies,
-        role : role
-    });
     try{
         const savedUser = await userToPost.save();
         res.send(savedUser);
