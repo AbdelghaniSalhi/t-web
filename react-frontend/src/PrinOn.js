@@ -45,7 +45,13 @@ class PrinOn extends Component {
                         <Nav.Link href="/PrinOn">Principal</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                        <Nav.Link href="/Login">Profil</Nav.Link>
+                        <Nav.Link href="/">Profil</Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                        <Nav.Link href="/DeleteCrypto">DeleteCrypto</Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                        <Nav.Link href="/AjouterCrypto">AddCrypto</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
                         <Nav.Link href="/">Logout</Nav.Link>
