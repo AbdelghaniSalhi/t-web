@@ -41,8 +41,9 @@ class ChoixCrypto extends Component {
         console.log(arr)
         axios.put('http://localhost:6200/users/profile', {cryptoCurrencies:arr} ,{headers : {"auth-token": localStorage.getItem("auth-token")}})
         .then(response => {
-            alert("ajouté");
-            window.location.replace('/PrinOn');
+            alert("Ajouté");
+            //console.log(localStorage.getItem("auth-token"))
+            window.location.replace('/Login');
     
         }).catch(err => {
             alert(err)

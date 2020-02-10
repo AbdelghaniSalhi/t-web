@@ -12,6 +12,8 @@ import PrinOff from './PrinOff';
 import Admin from './Admin';
 import AddCrypto from './AddCrypto';
 import ChoixCrypto from './ChoixCrypto';
+import DeleteCrypto from './DeleteCrypto';
+import AjouterCrypto from './AjouterCrypto';
 
 class App extends Component {
   render() {
@@ -32,6 +34,8 @@ class App extends Component {
               <Route path="/Admin" component={Admin} />
               <Route path="/AddCrypto" component={AddCrypto} />
               <Route path="/ChoixCrypto" component={ChoixCrypto} />
+              <Route path="/DeleteCrypto" component={DeleteCrypto} />
+              <Route path="/AjouterCrypto" component={AjouterCrypto} />
             </Switch>
          
         </Router>
