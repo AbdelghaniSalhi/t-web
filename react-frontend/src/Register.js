@@ -13,13 +13,13 @@ class Register extends Component {
       username: '',
       email: '',
       password: '',
-      currency:'',
-      keywords:[],
-      cryptoCurrencies:[],
+      currency:''
+      
       };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+
 
   handleChange(e){
     let target = e.target;
@@ -34,8 +34,14 @@ class Register extends Component {
     // make API call
     e.preventDefault()
     axios.post('http://localhost:6200/users/register',this.state)
-    .then(response=>{
-      alert("Utilisateur créé");
+    .then(res =>{
+        axios.post('http://localhost:6200/users/login', {email:this.state.email, password:this.state.password})
+        .then(response =>{
+          localStorage.setItem("auth-token", response.data.token);
+          window.location.replace('/ChoixCrypto');
+        }).catch(err => {
+          alert(err)
+        })
     }).catch(error =>{
       alert(error)
     })
@@ -81,13 +87,15 @@ class Register extends Component {
           <label htmlFor="exampleInputPassword2">Confirmer Mot de passe</label>
           <input name="display_name2" type="password" onChange={this.handleConfirmPassword}  className="form-control" id="exampleInputPassword2" placeholder="Mot de passe" />
           </div>
+         
           <div className="currency">
-          <label htmlFor="exampleInputEmail2">Devise</label>
-          <input name="Devise" value={this.state.currency} onChange={this.handleChange} type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Devise" />
+          <label htmlFor="exampleInputEmail1">Devise</label>
+          <input name="currency" value={this.state.currency} onChange={this.handleChange} type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Devise" />
           </div>
           <div className="createAccount">
             <button type="submit" className="btn btn-primary">Submit</button>
           </div>
+          
         </form>
         <Facebook/>
       </div>
