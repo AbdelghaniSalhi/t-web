@@ -12,6 +12,7 @@ class Admin extends Component {
        this.state = {
            posts:[]
        }
+       this.delete = this.delete.bind(this);
     }
     componentDidMount(){
        axios.get('http://localhost:6200/cryptos')
@@ -23,41 +24,32 @@ class Admin extends Component {
        console.log(error)
        })
        }
-       OnDeleteClick(event){
-        event.preventDefault()
-           axios.delete(
-               'http://localhost:6200/cryptos/',
-               { data: post.id },
-               {
-                   headers: {
-                       "Authorization": localStorage.getItem("access_token"),
-                       "Content-Type": "application/json"
-                   }
-               }
-           ).then(data => {
-               console.log(data)
 
-           }).catch(err => {
-              console.log(err)
-        })
-
-       }
+       delete(id){
+       axios.delete('http://localhost:6200/cryptos/'+id,{headers : {"auth-token": localStorage.getItem("auth-token")}})
+       window.location.replace('/Admin');
+    }
+   
        render(){
        const { posts}=this.state
        const divStyle = {
         height :'100px',
         
       }
+    
        return(
            <div className="wrapper">
                <div className="f-wrapper"> 
                 <Nav className="justify-content-end" activeKey="/">
                         <Nav.Item>
-                        <Nav.Link href="/PrincipalOff2">Principal</Nav.Link>
+                        <Nav.Link href="/Admin">Principal</Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                        <Nav.Link href="/AddCrypto">Add Crypto</Nav.Link>
                         </Nav.Item>
                        
                         <Nav.Item>
-                        <Nav.Link href="/Register">Logout</Nav.Link>
+                        <Nav.Link href="/">Logout</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
                         
@@ -85,7 +77,7 @@ class Admin extends Component {
                         {
                         posts.length ?
                     
-                            posts.map(post=> <tr key={post.id}>
+                            posts.map(post=> <tr key={post.Id}>
                             
                             <td>{post.Cryptommonaie}</td>
                             <td>{post.Prix}</td>
@@ -93,7 +85,7 @@ class Admin extends Component {
                             <td>{post["Prix le plus bas"]}</td>
                             <td>{post["Prix le plus Haut"]}</td>
                             <td><img src={post.URL}alt="..." style={ divStyle}/></td>
-                            <td><Button onClick={this.OnDeleteClick} variant="secondary">Delete</Button> </td>
+                            <td><Button onClick={this.delete.bind(this, post.Id)} variant="secondary">Delete</Button> </td>
                             </tr>):
                             null
                             }

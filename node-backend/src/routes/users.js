@@ -27,17 +27,14 @@ router.route('/profile').put(verifié, async (req,res) => {
             email : req.body.email ? req.body.email : utilisateur.email,
             password : req.body.password ? req.body.password : utilisateur.password,
             currency : req.body.currency ? req.body.currency : utilisateur.currency,
-            keywords : req.body.keywords ? req.body.keywords : utilisateur.keywords,
             cryptoCurrencies : req.body.cryptoCurrencies ? req.body.cryptoCurrencies : utilisateur.cryptoCurrencies,
             role: utilisateur.role,
         };
 
-        
         let salt = await bcrypt.genSalt(10);
         let hashMdp = await bcrypt.hash(newUser.password, salt);
         newUser.password = hashMdp;
         
-
         let savedUser = await User.findByIdAndUpdate({_id: req.user.user._id}, newUser);
         res.json(savedUser);
 
@@ -72,7 +69,6 @@ router.post('/register',async (req,res) => {
         email: req.body.email,
         password:hashMdp,
         currency: req.body.currency,
-        keywords: req.body.keywords,
         cryptoCurrencies: req.body.cryptoCurrencies,
         role : role
     });
@@ -108,7 +104,7 @@ router.post('/login',async (req,res) => {
     // création du token
     const token = jwt.sign({ user }, process.env.TOKEN, { expiresIn: '1h' });
 
-    res.json({"token":token});
+    res.json({"token":token, "role": user.role});
 });
 
 module.exports = router;
