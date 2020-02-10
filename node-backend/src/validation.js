@@ -5,8 +5,8 @@ const registerValidation = data => {
         username: Joi.string().required(),
         email: Joi.string().required().email(),
         password: Joi.string().required(),
-        keywords: Joi.array().items(Joi.string()).required().min(3),
-        cryptoCurrencies: Joi.array().items(Joi.string()).required().min(3),
+        keywords: Joi.array().items(Joi.string()),
+        cryptoCurrencies: Joi.array().items(Joi.string()),
         currency: Joi.string().required()
     });
     return validationschema.validate(data);

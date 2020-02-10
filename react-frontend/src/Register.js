@@ -4,7 +4,6 @@ import Facebook from './components/Facebook';
 import React, { Component } from 'react';
 import './assets/style.css';
 import axios from 'axios';
-import DynamicSelect from './components/DynamicSelect';
 
 class Register extends Component {
 
@@ -16,36 +15,10 @@ class Register extends Component {
       password: '',
       currency:'',
       keywords:[],
-      cryptocurrencies: [],
-      selectedValue: 'NothingSelected',
-      arrayOfData: []
-    };
+      cryptoCurrencies:[],
+      };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  componentDidMount(){
-    axios.get('http://localhost:6200/cryptos/liste')
-    .then(response =>{
-        this.setState({arrayOfData: response.data})
-    }).catch(error=>{
-        console.log(error)
-    })
-  }
-  
-  state = {
-    username: '',
-    email: '',
-    password: '',
-    currency:'',
-    keywords:[],
-    selectedValue: 'Nothing Selected',
-    arrayOfData: []
-  }
-  handleSelectChange = (selectedValue) =>{
-    this.setState({
-      selectedValue: selectedValue
-    });
   }
 
   handleChange(e){
@@ -60,12 +33,11 @@ class Register extends Component {
    
     // make API call
     e.preventDefault()
-    console.log(this.state)
     axios.post('http://localhost:6200/users/register',this.state)
     .then(response=>{
       alert("Utilisateur créé");
     }).catch(error =>{
-      alert("Un ou plusieurs champs incorrect(s)")
+      alert(error)
     })
   }
 
@@ -109,12 +81,10 @@ class Register extends Component {
           <label htmlFor="exampleInputPassword2">Confirmer Mot de passe</label>
           <input name="display_name2" type="password" onChange={this.handleConfirmPassword}  className="form-control" id="exampleInputPassword2" placeholder="Mot de passe" />
           </div>
-          <p className="App-intro">
-          <DynamicSelect arrayOfData={this.state.arrayOfData} onSelectChange={this.handleSelectChange} /> <br /><br />
-          <div>
-            Selected value: {this.state.selectedValue}
+          <div className="currency">
+          <label htmlFor="exampleInputEmail2">Devise</label>
+          <input name="Devise" value={this.state.currency} onChange={this.handleChange} type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Devise" />
           </div>
-        </p>          
           <div className="createAccount">
             <button type="submit" className="btn btn-primary">Submit</button>
           </div>

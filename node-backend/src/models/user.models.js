@@ -24,8 +24,6 @@ const userSchema = new Schema({
     keywords: {
         type: Array,
         of: String,
-        minlength: 3,
-
     },
     currency: {
         type: String
@@ -36,7 +34,6 @@ const userSchema = new Schema({
     cryptoCurrencies: {
         type: Array,
         of: String,
-        minlength: 3,
     }
 }, {
     timestamps: true,
