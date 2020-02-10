@@ -124,4 +124,36 @@ router.post('/login',async (req,res) => {
     res.json({"token":token, "role": user.role});
 });
 
+//Relogin
+// Connexion
+router.post('/relogin',async (req,res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    // Verifier que l'email existe
+    const user = await User.findOne({email: req.body.email});
+    if (!user) return res.status(400).send("Email ou Mot de Passe incorrect");
+
+    // Vérifier que le mot de passe est correct
+    const mdpValide = (req.body.password === user.password);
+    if (!mdpValide) return res.status(400).send("Email ou Mot de Passe incorrect");
+
+    // création du token
+    const token = jwt.sign({ user }, process.env.TOKEN, { expiresIn: '1h' });
+
+    res.json({"token":token, "role": user.role});
+});
+
+// Connexion
+router.post('/loginFb',async (req,res) => {
+    const email = req.body.email;
+    // Verifier que l'email existe
+    const user = await User.findOne({email: req.body.email});
+    if (!user) return res.status(400).send("L'utilisateur n'existe pas");
+    // création du token
+    const token = jwt.sign({ user }, process.env.TOKEN, { expiresIn: '1h' });
+
+    res.json({"token":token, "role": user.role});
+});
+
+
 module.exports = router;
