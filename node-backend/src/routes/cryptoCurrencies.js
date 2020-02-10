@@ -45,7 +45,6 @@ router.route('/').get(async (req, res) =>{
                 };
             resultat.push(elem);
         }catch (err) {
-            res.send(err)
             erreur = true;
         }finally {
             if (erreur == true) {
