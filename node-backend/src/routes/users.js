@@ -37,7 +37,7 @@ router.route('/profile').put(verifié, async (req,res) => {
         };
             
         let savedUser = await User.findByIdAndUpdate({_id: req.user.user._id}, newUser);
-        res.json(newUser);
+        res.json(savedUser);
 
     }catch(err) {
         res.status(400).send(err);
