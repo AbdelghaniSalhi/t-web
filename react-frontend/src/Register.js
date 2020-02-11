@@ -94,7 +94,7 @@ class Register extends Component {
     console.log(this.state)
     return (
         <div className="wrapper">
-          <div className="form-wrapper" style={{height:'80%'}}>
+          <div className="form-wrapper" style={{height:'90%'}}>
 
 
 
@@ -127,10 +127,11 @@ class Register extends Component {
                         </select>
                       </div>
                     </div>
-                    <div className="text-center" style={{width: '180%',position:'relative',top:'53px'}}>
+                    <div className="text-center" style={{width: '180%',position:'relative',top:'37px',left:'80px'}}>
                       <MDBBtn type="submit" color="primary" >Submit</MDBBtn>
                     </div>
-                    <p>INSCRIVEZ-VOUS AVEC...</p>
+                    <p style={{width: '180%',position:'relative',top:'43px',left:'130px'}}><b>Ou</b> </p>
+                    <p style={{width: '180%',position:'relative',top:'43px'}}><b>INSCRIVEZ-VOUS AVEC</b>...</p>
                     <Google />
                   </form>
                 </MDBCol>
