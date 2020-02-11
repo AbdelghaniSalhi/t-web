@@ -64,7 +64,9 @@ class AjouterCrypto extends Component {
     submit(event){
         event.preventDefault()
         for (let i =0; i<utilisateur.length; i++){
-            aEnvoyer.push(utilisateur[i]);
+            if(!aEnvoyer.includes(utilisateur[i])){
+                aEnvoyer.push(utilisateur[i]);
+            }
         }
         console.log(aEnvoyer);
         axios.put('http://localhost:6200/users/profile', {cryptoCurrencies:aEnvoyer} ,{headers : {"auth-token": localStorage.getItem("auth-token")}})

@@ -163,13 +163,9 @@ router.post('/authGoogle',async (req,res) => {
         });
         try{
             savedUser = await userToPost.save()
-            .then( response => {
-                //const user = await User.findOne({email: mail});
-                //const token = jwt.sign({ user }, process.env.TOKEN, { expiresIn: '1h' });
-                //res.json({"token":token, "role": user.role});
-                res.send(response)
-            }).catch(err =>
-                res.return(err))
+            const user = await User.findOne({email: mail});
+            const token = jwt.sign({ user }, process.env.TOKEN, { expiresIn: '1h' });
+            res.json({"token":token, "role": user.role});
         }catch(err) {
             res.status(400).send(err);
         }
