@@ -45,7 +45,7 @@ class ArticleOn extends Component {
        
        
        return(
-           <div className="wrapper">
+           <div className="www">
                <div className="f-wrapper"> 
                 <Nav className="justify-content-end" activeKey="/">
                         <Nav.Item>
