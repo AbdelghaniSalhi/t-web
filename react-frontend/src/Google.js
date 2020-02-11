@@ -77,7 +77,7 @@ class GoogleLogin extends Component{
     
     render(){
         return(
-            <img src={google} style={{width: '120%',position:'relative',top:'-0px',left:'140px'}} title="google login" alt="google" onClick={ () => this.googleLogin() }/>
+            <img src={google} style={{width: '120%',position:'relative',top:'-21px',left:'140px'}} title="google login" alt="google" onClick={ () => this.googleLogin() }/>
         )
     }
 }
