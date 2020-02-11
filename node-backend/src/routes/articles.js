@@ -11,7 +11,6 @@ router.route('/').get((req, res) =>{
     axios.get("https://cryptocontrol.io/api/v1/public/news/", {headers :{ "x-api-key": process.env.API_ARTICLES}})
         .then(response => {
             let result = [];
-            console.log(response.data)
             for (let i=0; i<response.data.length; i++){
                 let elem = {
                     id : response.data[i]._id,
