@@ -4,6 +4,7 @@ const {registerValidation, loginValidation} = require('../validation')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const verifié = require ('./verifierToken');
+let CryptoCurrency = require ('../models/crypto.models');
 
 router.route('/').get((req, res) =>{
     User.find()
@@ -21,7 +22,11 @@ router.route('/profile').get(verifié ,(req,res) => {
 router.route('/profile').put(verifié, async (req,res) => {
     try{
         let utilisateur = await User.findById(req.user.user._id);
-
+        if (req.body.password){
+            let salt = await bcrypt.genSalt(10);
+            req.body.password = await bcrypt.hash(req.body.password, salt);
+        }
+        
         let newUser = {
             username : req.body.username ? req.body.username : utilisateur.username,
             email : req.body.email ? req.body.email : utilisateur.email,
@@ -30,11 +35,7 @@ router.route('/profile').put(verifié, async (req,res) => {
             cryptoCurrencies : req.body.cryptoCurrencies ? req.body.cryptoCurrencies : utilisateur.cryptoCurrencies,
             role: utilisateur.role,
         };
-
-        let salt = await bcrypt.genSalt(10);
-        let hashMdp = await bcrypt.hash(newUser.password, salt);
-        newUser.password = hashMdp;
-        
+            
         let savedUser = await User.findByIdAndUpdate({_id: req.user.user._id}, newUser);
         res.json(savedUser);
 
@@ -61,17 +62,33 @@ router.post('/register',async (req,res) => {
     
     const mail = req.body.email;
     var role = "Utilisateur";
-    if (mail.includes("epitech.eu")) role = "Administrateur";
-    // User a envoyer a la BDD
+    let userToPost = {};
+    if (mail.includes("epitech.eu")) {
+        role = "Administrateur";   
+        let requete = [];
+        const cursor = CryptoCurrency.find().cursor();
+        for (let crypto = await cursor.next(); crypto != null; crypto = await cursor.next()) {
+            requete.push(crypto.symbol);
+        }
+        userToPost = new User({
+            username: req.body.username,
+            email: req.body.email,
+            password:hashMdp,
+            currency: req.body.currency,
+            cryptoCurrencies: requete,
+            role : role
+            });
+    } else {
+        userToPost = new User({
+            username: req.body.username,
+            email: req.body.email,
+            password:hashMdp,
+            currency: req.body.currency,
+            cryptoCurrencies: [],
+            role : role
+        });
+    }
     
-    const userToPost = new User({
-        username: req.body.username,
-        email: req.body.email,
-        password:hashMdp,
-        currency: req.body.currency,
-        cryptoCurrencies: req.body.cryptoCurrencies,
-        role : role
-    });
     try{
         const savedUser = await userToPost.save();
         res.send(savedUser);
@@ -106,5 +123,37 @@ router.post('/login',async (req,res) => {
 
     res.json({"token":token, "role": user.role});
 });
+
+//Relogin
+// Connexion
+router.post('/relogin',async (req,res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    // Verifier que l'email existe
+    const user = await User.findOne({email: req.body.email});
+    if (!user) return res.status(400).send("Email ou Mot de Passe incorrect");
+
+    // Vérifier que le mot de passe est correct
+    const mdpValide = (req.body.password === user.password);
+    if (!mdpValide) return res.status(400).send("Email ou Mot de Passe incorrect");
+
+    // création du token
+    const token = jwt.sign({ user }, process.env.TOKEN, { expiresIn: '1h' });
+
+    res.json({"token":token, "role": user.role});
+});
+
+// Connexion
+router.post('/loginFb',async (req,res) => {
+    const email = req.body.email;
+    // Verifier que l'email existe
+    const user = await User.findOne({email: req.body.email});
+    if (!user) return res.status(400).send("L'utilisateur n'existe pas");
+    // création du token
+    const token = jwt.sign({ user }, process.env.TOKEN, { expiresIn: '1h' });
+
+    res.json({"token":token, "role": user.role});
+});
+
 
 module.exports = router;

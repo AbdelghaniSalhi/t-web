@@ -119,7 +119,7 @@
 
   .www {
     width: 100%;
-    height :100vh;
+  
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -129,4 +129,8 @@
 
   }
   
-  
+  Card.Img {
+    text-align:'center';
+    width: '600px';
+    height :'200px';
+  }

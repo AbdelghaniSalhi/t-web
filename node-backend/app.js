@@ -24,6 +24,7 @@ connexion.once('open', () => {
 const usersRouter = require('./src/routes/users');
 const postRoute = require('./src/routes/routesprivées');
 const cryptosRoute = require('./src/routes/cryptoCurrencies');
+const articles = require('./src/routes/articles');
 // App Instance
 app.use(cors());
 app.use(express.json());
@@ -31,6 +32,7 @@ app.use(express.json());
 app.use('/users', usersRouter);
 app.use('/posts', postRoute);
 app.use('/cryptos', cryptosRoute);
+app.use('/articles', articles);
 
 app.get('/', function (req,res) {
     res.setHeader('Content-Type','text/html');
