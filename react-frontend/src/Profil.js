@@ -13,8 +13,6 @@ class Profil extends Component {
         this.state = {
             
             currency: '',
-         
-           
             password: '',
             username: ''
         }
