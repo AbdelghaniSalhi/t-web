@@ -9,6 +9,9 @@ let base=[]
 let aEnvoyer=[];
 let utilisateur = [];
 
+let emailU = '';
+let passwordU = '';
+
 class AjouterCrypto extends Component {
 
     constructor(props){
@@ -31,6 +34,9 @@ class AjouterCrypto extends Component {
             }
             axios.get('http://localhost:6200/users/profile',{headers : {"auth-token": localStorage.getItem("auth-token")}})
             .then(response => {
+                emailU = response.data.user.email;
+                passwordU = response.data.user.password;
+                
                 for (let j =0 ; j< response.data.user.cryptoCurrencies.length; j++){
                     utilisateur.push(response.data.user.cryptoCurrencies[j]);
                 }
@@ -63,9 +69,12 @@ class AjouterCrypto extends Component {
         console.log(aEnvoyer);
         axios.put('http://localhost:6200/users/profile', {cryptoCurrencies:aEnvoyer} ,{headers : {"auth-token": localStorage.getItem("auth-token")}})
         .then(response => {
-            alert("Ajouté");
-            //console.log(localStorage.getItem("auth-token"))
-            window.location.replace('/Login');
+            alert("Ajouté !");
+            axios.post('http://localhost:6200/users/relogin', {email: emailU, password: passwordU})
+            .then(response =>{
+                localStorage.setItem("auth-token", response.data.token);
+                window.location.replace('/PrinOn');
+            })
     
         }).catch(err => {
             alert(err)

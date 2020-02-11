@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import "./assets/style.css";
 import axios from 'axios';
 
-
+let emailU = '';
+let passwordU = '';
 
 class Profil extends Component {
 
@@ -27,16 +28,15 @@ class Profil extends Component {
         .then(response =>{
             console.log(response.data.user)
             this.setState({
-                //email: response.data.user.email,
                 currency:response.data.user.currency,
                 password: '',
                 username: response.data.user.username,
             })
-            
-            console.log(this.state.username)
-        })
+            emailU = response.data.user.email;
+            passwordU = response.data.user.password;
+          })
         .catch(error=>{
-        console.log(error)
+          alert("Erreur lors de la modification")
         })
         }
 
@@ -49,15 +49,25 @@ class Profil extends Component {
         });
       }
 
+      retourPrincipale(e){
+        e.preventDefault();
+        window.location.replace("/PrinOn");
+      }
+
     
      handleSubmit(e){
         e.preventDefault()
        // console.log(this.state)
         axios.put('http://localhost:6200/users/profile',this.state,{headers : {"auth-token": localStorage.getItem("auth-token")}})
         .then(response=>{
-            window.location.replace('/Login');
+          alert("Profil Modifié!");
+          axios.post('http://localhost:6200/users/relogin', {email: emailU, password: passwordU})
+          .then(response =>{
+            localStorage.setItem("auth-token", response.data.token);
+            window.location.reload();
+          })
         }).catch(error => {
-          alert(error);
+          alert("Erreur lors de la modification");
         })
       }
      
@@ -108,7 +118,9 @@ class Profil extends Component {
              <div className="editerProfile">
             <button type="submit" className="btn btn-primary">Submit</button>
           </div>
-           
+          <div className="retour">
+            <button type="retour" className="btn btn-primary" onClick={this.retourPrincipale}>Retour</button>
+          </div>
            
              
 
