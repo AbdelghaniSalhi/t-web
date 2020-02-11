@@ -1,9 +1,14 @@
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap-css-only/css/bootstrap.min.css";
+import "mdbreact/dist/css/mdb.css";
 
-import Facebook from './components/Facebook';
 
+import { MDBContainer, MDBRow, MDBCol,MDBBtn, MDBInput } from 'mdbreact';
 import React, { Component } from 'react';
 import './assets/style.css';
 import axios from 'axios';
+import Google from './Google.js'
 
 class Register extends Component {
 
@@ -14,12 +19,33 @@ class Register extends Component {
       email: '',
       password: '',
       currency:''
-      
-      };
+
+    };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  state = {
+    options: [
+      {
+        text: "EUR",
+        value: "EUR"
+      },
+      {
+        text: "USD",
+        value: "USD"
+      },
+      {
+        text:"NGN",
+        value: "NGN"
+      },
+      {
+        text:"GBP",
+        value:"GBP"
+      }
+
+    ]
+  };
 
   handleChange(e){
     let target = e.target;
@@ -30,77 +56,90 @@ class Register extends Component {
     });
   }
   handleSubmit(e){
-   
+
     // make API call
     e.preventDefault()
     axios.post('http://localhost:6200/users/register',this.state)
-    .then(res =>{
-        axios.post('http://localhost:6200/users/login', {email:this.state.email, password:this.state.password})
-        .then(response =>{
-          localStorage.setItem("auth-token", response.data.token);
-          window.location.replace('/ChoixCrypto');
-        }).catch(err => {
-          alert("login" + err)
-        })
-    }).catch(error =>{
-      alert("Le forumulaire contient des erreurs !")
+        .then(res =>{
+          axios.post('http://localhost:6200/users/login', {email:this.state.email, password:this.state.password})
+              .then(response =>{
+                localStorage.setItem("auth-token", response.data.token);
+                window.location.replace('/ChoixCrypto');
+              }).catch(err => {
+            alert(err)
+          })
+        }).catch(error =>{
+      alert(error)
     })
   }
 
   insertData(nonce){
     axios.get('http://wp.ruvictor.com/api/user/register/?username='+this.state.username+'&email='+this.state.email+'&password='+this.state.password)
-    .then(res => {
-    }).catch(error => {
+        .then(res => {
+        }).catch(error => {
       console.log(error.response)
-  });
+    });
   }
 
   getWPnonce(){
     axios.get('http://wp.ruvictor.com/api/get_nonce/?controller=user&method=register')
-    .then(res => {
-      this.insertData(res.data.nonce);
-    }).catch(error => {
+        .then(res => {
+          this.insertData(res.data.nonce);
+        }).catch(error => {
       console.log(error.response)
-  });
+    });
   }
 
   render(){
     console.log(this.state)
     return (
-      <div className="wrapper">
-          <div className="form-wrapper">
-            <h1>Create Account</h1>
-        <form onSubmit={this.handleSubmit}>
-          <div className="username">
-          <label htmlFor="exampleInputEmail1">Nom d'utilisateur</label>
-          <input name="username" value={this.state.username} onChange={this.handleChange} type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Votre Nom" />
+        <div className="wrapper">
+          <div className="form-wrapper" style={{height:'80%'}}>
+
+
+
+            <MDBContainer>
+              <MDBRow>
+                <MDBCol md="6">
+                  <form onSubmit={this.handleSubmit}>
+                    <p className="h5 text-center mb-4">Sign up</p>
+                    <div className="grey-text">
+                      <MDBInput label="Name"  name="username" value={this.state.username} onChange={this.handleChange} htmlFor="exampleInputEmail1" icon="user" group type="text"
+                                success="right" style={{width: '180%'}} />
+
+                      <MDBInput label="Email" icon="envelope" name="email" value={this.state.email} onChange={this.handleChange} group type="email"
+                                success="right" style={{width: '180%'}} />
+
+
+
+                      <MDBInput label="Password" name="password" value={this.state.password} onChange={this.handleChange} icon="lock" group type="password" style={{width: '180%'}}  />
+
+                      <MDBInput label="Confirm Password" name="display_name2" id="exampleInputPassword2" onChange={this.handleConfirmPassword} icon="lock"  type="password" style={{width: '180%',position:'relative',top:'20px'}}  />
+
+                      <div>
+                        <select className="browser-default custom-select" name="currency" value={this.state.currency} onChange={this.handleChange}
+                                style={{width: '180%',position:'relative',top:'20px'}}>
+                          <option>Choose your Devise</option>
+                          <option value="EUR">EUR</option>
+                          <option value="USD">USD</option>
+                          <option value="GBP">GBP</option>
+                          <option value="JPY">JPY</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="text-center" style={{width: '180%',position:'relative',top:'60px'}}>
+                      <MDBBtn type="submit" color="primary" >Submit</MDBBtn>
+                    </div>
+                    <Google />
+                  </form>
+                </MDBCol>
+              </MDBRow>
+            </MDBContainer>
+
           </div>
-          <div className="email">
-          <label htmlFor="exampleInputEmail1">Adresse Mail</label>
-          <input name="email" value={this.state.email} onChange={this.handleChange} type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Adresse email" />
-          </div>
-          <div className="password">
-          <label htmlFor="exampleInputPassword1">Mot de Passe</label>
-          <input name="password" type="password" value={this.state.password} onChange={this.handleChange}  className="form-control" id="exampleInputPassword1" placeholder="Mot De passe" />
-          </div>
-          <div className="password">
-          <label htmlFor="exampleInputPassword2">Confirmer Mot de passe</label>
-          <input name="display_name2" type="password" onChange={this.handleConfirmPassword}  className="form-control" id="exampleInputPassword2" placeholder="Mot de passe" />
-          </div>
-         
-          <div className="currency">
-          <label htmlFor="exampleInputEmail1">Devise</label>
-          <input name="currency" value={this.state.currency} onChange={this.handleChange} type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Devise" />
-          </div>
-          <div className="createAccount">
-            <button type="submit" className="btn btn-primary">Submit</button>
-          </div>
-          
-        </form>
-        <Facebook/>
-      </div>
-      </div>
-      
+        </div>
+
+
     );
   }
 }
