@@ -1,3 +1,10 @@
+
+/*Routeur gérant les utilisateurs 
+**  Fonctionnalités: Ajout, Modification de comptes utilisateurs,
+**                   Login avec Token JWT
+**                   Relogin de l'utilisateur courant lors de la mise a jour de ses informations
+**                   Gestion de l'authentification Google
+*/
 const router = require('express').Router();
 let User = require('../models/user.models');
 const {registerValidation, loginValidation} = require('../validation')
@@ -6,19 +13,20 @@ const jwt = require('jsonwebtoken');
 const verifié = require ('./verifierToken');
 let CryptoCurrency = require ('../models/crypto.models');
 
+// GET retourne tous les utilisateurs en base
 router.route('/').get((req, res) =>{
     User.find()
         .then(users => res.json(users))
         .catch(err => res.status(400).json('Error : ' + err));
 });
-//récuperer le profil d'un utilisateur
 
+// GET avec Token, récupere le profil d'un utilisateur connecté
 router.route('/profile').get(verifié ,(req,res) => {
     res.send(req.user);
 
 });
  
-//Modifier le profil
+//PUT modifie le profil de l'utilisateur connecté
 router.route('/profile').put(verifié, async (req,res) => {
     try{
         let utilisateur = await User.findById(req.user.user._id);
@@ -44,11 +52,10 @@ router.route('/profile').put(verifié, async (req,res) => {
     }
 })
 
-module.exports = router;
 
-
-// Créer un Utilisateur
+// POST Crée un nouvel utilisateur
 router.post('/register',async (req,res) => {
+    // Validation du formulaire d'insctiption
     const {error} = registerValidation(req.body)
     if (error) return res.status(400).send(error.details[0].message);
 
@@ -56,7 +63,7 @@ router.post('/register',async (req,res) => {
     const user = await User.findOne({email : req.body.email});
     if (user) return res.status(400).send("Email déjà existant");
 
-    // crypter les mdp
+    // Encryption des mots de passe
     const salt = await bcrypt.genSalt(10);
     const hashMdp = await bcrypt.hash(req.body.password, salt);
     
@@ -98,7 +105,7 @@ router.post('/register',async (req,res) => {
 });
 
 
-// Connexion
+//POST connexion utilisateur, retourne un Token JWT
 router.post('/login',async (req,res) => {
     const {error} = loginValidation(req.body)
     if (error) return res.status(400).send(error.details[0].message);
@@ -124,7 +131,7 @@ router.post('/login',async (req,res) => {
     res.json({"token":token, "role": user.role});
 });
 
-//Relogin
+//POST reconnexion de l'utilisateur courant après une modification, retourne un Token JWT
 router.post('/relogin',async (req,res) => {
     const email = req.body.email;
     const password = req.body.password;
@@ -142,7 +149,10 @@ router.post('/relogin',async (req,res) => {
     res.json({"token":token, "role": user.role});
 });
 
-// Connexion
+/*Authentification Google, gère les deux cas de figure possibles
+**  Utilisateur existant, le connecte et retourne un Token JWT
+**  Utilisateur non existant, lui crée un compte dans notre Base de Données
+*/
 router.post('/authGoogle',async (req,res) => {
     const mail = req.body.email;
     const name = req.body.username
@@ -176,6 +186,4 @@ router.post('/authGoogle',async (req,res) => {
     }
 
 });
-
-
 module.exports = router;

@@ -1,3 +1,11 @@
+/* Routeur gérant les Cryptommonaies
+** Fonctionnalités :
+**      Ajout d'une cryptomonnaie dans notre base de données (Réservée aux Administrateurs)
+**      Récupération d'informations concernant toutes les cryptommonaies présentes dans notre bases de données
+**      Récupération d'informations uniquement les cryptomonnaies auxquelles un utilisateur est abboné
+**      Récupération d'informations pour une cryptommonnaie donnée
+**      Récupération d'informations pour une cryptommonnaie donnée sur une periode donnée
+*/
 const router = require('express').Router();
 let CryptoCurrency = require ('../models/crypto.models');
 const jwt = require('jsonwebtoken');
@@ -6,7 +14,8 @@ const host = "https://rest.coinapi.io/v1";
 const nomics = "https://api.nomics.com/v1";
 const axios = require('axios');
 
-// Liste des Cryptomonnaies en base
+
+//GET Liste des Cryptomonnaies en base
 router.route('/liste').get(async(req, res) =>{
     let requete = [];
     const cursor = CryptoCurrency.find().cursor();
@@ -16,7 +25,7 @@ router.route('/liste').get(async(req, res) =>{
     res.json(requete)
 });
 
-// Get all CryptoCurrencies
+//GET Informations sur toutes les cryptomonnaies de notre base
 router.route('/').get(async (req, res) =>{
     let requete = [];
     const cursor = CryptoCurrency.find().cursor();
@@ -68,6 +77,7 @@ router.route('/').get(async (req, res) =>{
 })
 
 
+//GET Informations concernant uniquement les CryptoMonnaies auxquelles l'utilisateur est abboné
 router.route('/logged').get(verifié,async(req, res) =>{
     let resultat = [];
     for( let i = 0; i < req.user.user.cryptoCurrencies.length; i++){   
@@ -116,7 +126,7 @@ router.route('/logged').get(verifié,async(req, res) =>{
 })
 
 
-// Get By Id Secure Route
+//GET By ID Informations sur une cryptommonaie donnée 
 router.route('/symbol/:cryptoId').get(verifié,async (req, res) =>{
     const id = req.params.cryptoId;
     const currency = req.user.user.currency;
@@ -160,7 +170,8 @@ router.route('/symbol/:cryptoId').get(verifié,async (req, res) =>{
 
 });
 
-// Get By Id and period Secure Route
+
+// Get By Id/Period Informations sur une cryptomonnaie sur une période donnée
 router.route('/symbol/:cryptoId/period/:period').get(verifié,async (req, res) =>{
     const id = req.params.cryptoId;
     const currency = req.user.user.currency;
@@ -183,10 +194,8 @@ router.route('/symbol/:cryptoId/period/:period').get(verifié,async (req, res) =
         let response = {};
         let erreur = false;
         try {
-            //res.send(host + "/ohlcv/" + id + "/" + currency +"/latest?period_id=1"+ p +"&limit=" + l);
             response_nomics = await axios.get(nomics + "/currencies/ticker?key="+ process.env.NOMICS_KEY + "&ids=" + id + "&interval=1h&convert=EUR")
             response = await axios.get(host + "/ohlcv/" + id + "/" + currency +"/latest?period_id=1"+ p +"&limit=" + l, {headers : {'X-CoinAPI-Key': process.env.API_KEY}});
-            //res.send(response.data)
             let result = [];
             for( let i = 0; i < response.data.length; i++){   
                 let elem =
@@ -236,9 +245,9 @@ router.route('/symbol/:cryptoId/period/:period').get(verifié,async (req, res) =
     }
 });
 
-// Post Secure route
+
+//POST Ajout d'une cryptomonnaie en base (Réservée à l'administrateur)
 router.post('/',verifié,async (req,res) => {
-    // New CryptoCurrency
     if (req.user.user.role == "Administrateur") {
         const cryptoToPost = new CryptoCurrency({
             name: req.body.name,
@@ -254,7 +263,9 @@ router.post('/',verifié,async (req,res) => {
         res.status(401).send("Seul un administrateur peut ajouter une cryptomonnaie");
     }
 });
-// Delete by id Secure Route
+
+
+//DELETE Retirer une cryptomonnaie de la base
 router.route('/:cryptoId').delete(verifié, async (req,res) => {
     if (req.user.user.role == "Administrateur") {
         const id = req.params.cryptoId;
@@ -266,8 +277,6 @@ router.route('/:cryptoId').delete(verifié, async (req,res) => {
     }
 
 });
-
-
 
 
 module.exports = router;
