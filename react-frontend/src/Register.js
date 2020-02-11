@@ -127,9 +127,10 @@ class Register extends Component {
                         </select>
                       </div>
                     </div>
-                    <div className="text-center" style={{width: '180%',position:'relative',top:'60px'}}>
+                    <div className="text-center" style={{width: '180%',position:'relative',top:'53px'}}>
                       <MDBBtn type="submit" color="primary" >Submit</MDBBtn>
                     </div>
+                    <p>INSCRIVEZ-VOUS AVEC...</p>
                     <Google />
                   </form>
                 </MDBCol>

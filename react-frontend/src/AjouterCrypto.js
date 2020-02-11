@@ -81,7 +81,6 @@ class AjouterCrypto extends Component {
         }).catch(err => {
             alert(err)
         })
-        //window.location.replace('/PrinOn');
     }
        render(){
        const { posts}=this.state
