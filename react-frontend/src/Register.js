@@ -40,10 +40,10 @@ class Register extends Component {
           localStorage.setItem("auth-token", response.data.token);
           window.location.replace('/ChoixCrypto');
         }).catch(err => {
-          alert(err)
+          alert("login" + err)
         })
     }).catch(error =>{
-      alert(error)
+      alert("Le forumulaire contient des erreurs !")
     })
   }
 
