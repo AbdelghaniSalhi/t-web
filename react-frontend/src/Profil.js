@@ -49,6 +49,11 @@ class Profil extends Component {
         });
       }
 
+      retourPrincipale(e){
+        e.preventDefault();
+        window.location.replace("/PrinOn");
+      }
+
     
      handleSubmit(e){
         e.preventDefault()
@@ -108,7 +113,9 @@ class Profil extends Component {
              <div className="editerProfile">
             <button type="submit" className="btn btn-primary">Submit</button>
           </div>
-           
+          <div className="retour">
+            <button type="retour" className="btn btn-primary" onClick={this.retourPrincipale}>Retour</button>
+          </div>
            
              
 
