@@ -4,6 +4,8 @@
     <list default="true" id="71923d7f-8280-46f9-a3f7-548d2f203d1b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/node-backend/src/routes/cryptoCurrencies.js" beforeDir="false" afterPath="$PROJECT_DIR$/node-backend/src/routes/cryptoCurrencies.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node-backend/src/routes/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/node-backend/src/routes/users.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-frontend/src/Admin.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-frontend/src/Admin.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

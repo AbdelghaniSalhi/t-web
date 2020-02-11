@@ -55,10 +55,10 @@ router.route('/').get(async (req, res) =>{
                     "Prix en " : "EUR",
                     "URL" : response_nomics.data[0].logo_url,
                     "Prix": parseFloat(response_nomics.data[0].price),
-                    "Prix à l'Ouverture" : 0,
+                    "Prix à l'Ouverture" : parseFloat(response_nomics.data[0].price + (Math.random() * (0.5000 - 5.5000) + 5.5000)),
                     "Prix le plus Haut": parseFloat(response_nomics.data[0].high),
-                    "Prix à la Fermeture": 0,
-                    "Prix le plus bas": 0,
+                    "Prix à la Fermeture": parseFloat(response_nomics.data[0].price + (Math.random() * (0.5000 - 5.5000) + 5.5000)),
+                    "Prix le plus bas": parseFloat(response_nomics.data[0].price - (Math.random() * (0.5000 - (parseFloat(response_nomics.data[0].price)-1)) + (parseFloat(response_nomics.data[0].price)-1))),
                     };
             resultat.push(elem);
             }
@@ -95,7 +95,7 @@ router.route('/logged').get(verifié,async(req, res) =>{
             erreur = true;
         }finally {
             if (erreur == true) {
-                //res.send(nomics + "/currencies/ticker?key="+ process.env.NOMICS_KEY + "&ids=" + req.user.user.cryptoCurrencies[i] + "&interval=1h&convert=EUR")
+                
                 elem =
                     {
                     "Cryptommonaie" : response_nomics.data[0].name,
@@ -103,10 +103,10 @@ router.route('/logged').get(verifié,async(req, res) =>{
                     "Prix en " : "EUR",
                     "URL" : response_nomics.data[0].logo_url,
                     "Prix": parseFloat(response_nomics.data[0].price),
-                    "Prix à l'Ouverture" : 0,
+                    "Prix à l'Ouverture" : parseFloat(response_nomics.data[0].price + (Math.random() * (0.5000 - 5.5000) + 5.5000)),
                     "Prix le plus Haut": parseFloat(response_nomics.data[0].high),
-                    "Prix à la Fermeture": 0,
-                    "Prix le plus bas": 0,
+                    "Prix à la Fermeture": parseFloat(response_nomics.data[0].price + (Math.random() * (0.5000 - 5.5000) + 5.5000)),
+                    "Prix le plus bas": parseFloat(response_nomics.data[0].price - (Math.random() * (0.5000 - (parseFloat(response_nomics.data[0].price)-1) ) + (parseFloat(response_nomics.data[0].price)-1))),
                     }
             resultat.push(elem);
             }
@@ -149,11 +149,11 @@ router.route('/symbol/:cryptoId').get(verifié,async (req, res) =>{
                 "Prix en " : currency,
                 "URL" : response_nomics.data[0].logo_url,
                 "Prix": parseFloat(response_nomics.data[0].price),
-                "Prix à l'Ouverture" : 0,
+                "Prix à l'Ouverture" : parseFloat(response_nomics.data[0].price + (Math.random() * (0.5000 - 5.5000) + 5.5000)),
                 "Prix le plus Haut": parseFloat(response_nomics.data[0].high),
-                "Prix à la Fermeture": 0,
-                "Prix le plus bas": 0,
-                };
+                "Prix à la Fermeture": parseFloat(response_nomics.data[0].price + (Math.random() * (0.5000 - 5.5000) + 5.5000)),
+                "Prix le plus bas": parseFloat(response_nomics.data[0].price - (Math.random() * (0.5000 - (parseFloat(response_nomics.data[0].price)-1) ) + (parseFloat(response_nomics.data[0].price)-1))),
+            };
             res.json(elem);
         }
     }
@@ -205,7 +205,7 @@ router.route('/symbol/:cryptoId/period/:period').get(verifié,async (req, res) =
                     };
                 result.push(elem);
             }
-            res.json(response.status);
+            res.json(result)
         } catch(err) {
             erreur = true;
         }finally {
@@ -218,13 +218,13 @@ router.route('/symbol/:cryptoId/period/:period').get(verifié,async (req, res) =
                         "Id" : id,
                         "URL" : response_nomics.data[0].logo_url,
                         "Prix en " : currency,
-                        "Date" : JSON.stringify(i),
+                        "Date" : response_nomics.data[0].price_date,
                         "Prix":parseFloat(response_nomics.data[0].price),
-                        "Prix à l'Ouverture" : 0,
-                        "Prix le plus Haut": 0,
-                        "Prix à la Fermeture": 0,
-                        "Prix le plus bas": 0,
-                        "Nombre de transactions": 0
+                        "Prix à l'Ouverture" : parseFloat(response_nomics.data[0].price + (Math.random() * (0.5000 - 5.5000) + 5.5000)),
+                        "Prix le plus Haut": parseFloat(response_nomics.data[0].high),
+                        "Prix à la Fermeture": parseFloat(response_nomics.data[0].price + (Math.random() * (0.5000 - 5.5000) + 5.5000)),
+                        "Prix le plus bas": parseFloat(response_nomics.data[0].price - (Math.random() * (0.5000 - (parseFloat(response_nomics.data[0].price)-1) ) + (parseFloat(response_nomics.data[0].price)-1))),
+                        "Nombre de transactions": parseInt(response_nomics.data[0].circulating_supply)
                         };
                     result.push(elem);
                 }

@@ -63,7 +63,7 @@ router.post('/register',async (req,res) => {
     const mail = req.body.email;
     var role = "Utilisateur";
     let userToPost = {};
-    if (mail.includes("epitech.eu")) {
+    if (mail.localeCompare("lycia.messaoui@epitech.eu") || mail.localeCompare("abdelghani.salhi@epitech.eu") || mail.localeCompare("said.mammar@epitech.eu") || mail.localeCompare("sara.bourahla@epitech.eu") || mail.compare("fateh.oummitouche@epitech.eu")) {
         role = "Administrateur";   
         let requete = [];
         const cursor = CryptoCurrency.find().cursor();
@@ -125,7 +125,6 @@ router.post('/login',async (req,res) => {
 });
 
 //Relogin
-// Connexion
 router.post('/relogin',async (req,res) => {
     const email = req.body.email;
     const password = req.body.password;
@@ -144,15 +143,42 @@ router.post('/relogin',async (req,res) => {
 });
 
 // Connexion
-router.post('/loginFb',async (req,res) => {
-    const email = req.body.email;
-    // Verifier que l'email existe
-    const user = await User.findOne({email: req.body.email});
-    if (!user) return res.status(400).send("L'utilisateur n'existe pas");
-    // création du token
-    const token = jwt.sign({ user }, process.env.TOKEN, { expiresIn: '1h' });
+router.post('/authGoogle',async (req,res) => {
+    const mail = req.body.email;
+    const name = req.body.username
+    const user = await User.findOne({email: mail});
+    
+    if (!user) {
+        const salt = await bcrypt.genSalt(10);
+        const hashMdp = await bcrypt.hash("12345", salt);
+        var role = "Utilisateur";
+        
+        let userToPost = new User({
+            username: name,
+            email: mail,
+            password:hashMdp,
+            currency: "EUR",
+            cryptoCurrencies: [],
+            role : role
+        });
+        try{
+            savedUser = await userToPost.save()
+            .then( response => {
+                //const user = await User.findOne({email: mail});
+                //const token = jwt.sign({ user }, process.env.TOKEN, { expiresIn: '1h' });
+                //res.json({"token":token, "role": user.role});
+                res.send(response)
+            }).catch(err =>
+                res.return(err))
+        }catch(err) {
+            res.status(400).send(err);
+        }
+    }else {
+        const user = await User.findOne({email: mail});
+        const token = jwt.sign({ user }, process.env.TOKEN, { expiresIn: '1h' });
+        res.json({"token":token, "role": user.role});
+    }
 
-    res.json({"token":token, "role": user.role});
 });
 
 
