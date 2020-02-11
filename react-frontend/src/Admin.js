@@ -10,7 +10,8 @@ class Admin extends Component {
     constructor(props){
         super(props);
         this.state = {
-            posts:[]
+            posts:[],
+            navigate: false
         }
         this.delete = this.delete.bind(this);
     }
@@ -25,9 +26,26 @@ class Admin extends Component {
             })
     }
 
+    componentDidUpdate() {
+        axios.get('http://localhost:6200/cryptos')
+            .then(response =>{
+                console.log(response)
+                this.setState({posts: response.data})
+            })
+            .catch(error=>{
+                console.log(error)
+            })
+    }
+
     delete(id){
         axios.delete('http://localhost:6200/cryptos/'+id,{headers : {"auth-token": localStorage.getItem("auth-token")}})
         window.location.replace('/Admin');
+    }
+    deconnecter(e){
+        e.preventDefault();
+        localStorage.removeItem("auth-token");
+        console.log(localStorage.getItem("auth-token"))
+        window.location.replace("/");
     }
 
     render(){
@@ -49,7 +67,7 @@ class Admin extends Component {
                         </Nav.Item>
 
                         <Nav.Item>
-                            <Nav.Link href="/">Logout</Nav.Link>
+                            <Nav.Link onClick={this.deconnecter}>Logout</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
 

@@ -26,6 +26,11 @@ class DeleteCrypto extends Component {
         posts:[]
     }
 
+    retourPrincipale(e){
+        e.preventDefault();
+        window.location.replace("/PrinOn");
+    }
+
     componentDidMount(){
        axios.get('http://localhost:6200/users/profile',{headers : {"auth-token": localStorage.getItem("auth-token")}})
        .then(response =>{
@@ -82,7 +87,7 @@ class DeleteCrypto extends Component {
        const { posts}=this.state
        console.log(posts)
        return(
-           <div className="wrapper">
+           <div className="www">
                <div className="f-wrapper"> 
                <form onSubmit={this.submit}>
                     <p></p>
@@ -90,11 +95,12 @@ class DeleteCrypto extends Component {
                     <p></p>
                     <p></p>
                 
-                <Table striped bordered hover size="sm">
+                <Table striped bordered hover size="sm" style={{width:'60%',margin:'auto'}}>
                         <thead>
                             <tr>
                                
                                 <th>Symbol</th>
+                                <th>Delete Crypto</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -103,18 +109,21 @@ class DeleteCrypto extends Component {
                     
                             posts.map(post=> <tr key={post.symbole}>
                             
-                            <td>{post}</td>
-                            <td><Button onClick={this.delete.bind(this, post)} variant="secondary">Delete</Button> </td>
+                            <td style={{textAlign :'center'}}>{post}</td>
+                            <td style={{textAlign :'center'}}><Button onClick={this.delete.bind(this, post)} variant="secondary">Delete</Button> </td>
                             </tr>):
                             null
                             }   
                         </tbody>
                     </Table>
-                   
-                    <div className="createAccount">
-            <button type="submit"  className="btn btn-primary" >Submit</button>
-          </div>
+
+                   <div className="createAccount" style={{width: '41%',position:'relative',left:'29%'}}>
+                       <button type="submit"  className="btn btn-primary" >Submit</button>
+                   </div>
                     </form>
+                   <div className="createAccount" style={{width: '41%',position:'relative',left:'29%'}}>
+                       <button onClick={this.retourPrincipale}  className="btn btn-primary" >Cancel</button>
+                   </div>
                 </div>
            </div>
 

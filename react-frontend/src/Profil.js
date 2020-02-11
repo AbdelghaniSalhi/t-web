@@ -96,27 +96,36 @@ class Profil extends Component {
         return (
             <div className="wrapper">
             <div className="form-wrapper">
-              <h1>Modifier profile</h1>
+                <h1><b>Modifier profile</b></h1>
               <form onSubmit={this.handleSubmit}>
              <div className="username">
              <label htmlFor="exampleInputUsername">Username</label>
-             <input name="username" value={this.state.username} onChange={this.handleChange} type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username" />
+             <input name="username" style={{width: '202%'}} value={this.state.username} onChange={this.handleChange} type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username" />
              </div>
             
           <div className="password">
           <label htmlFor="exampleInputPassword1">Password</label>
-          <input name="password" type="password" value={this.state.password} onChange={this.handleChange}  className="form-control" id="exampleInputPassword1" placeholder="Password" />
+          <input name="password" type="password" style={{width: '100%'}} value={this.state.password} onChange={this.handleChange}  className="form-control" id="exampleInputPassword1" placeholder="Password" />
           </div>
-          <div className="currency">
-             <label htmlFor="exampleInputCurrency">Devis</label>
-             <input name="currency" value={this.state.currency} onChange={this.handleChange} type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Devise" />
-             </div>
+
+            <div>
+                <label htmlFor="exampleInputUsername">Devise</label>
+                  <select className="browser-default custom-select" name="currency" value={this.state.currency} onChange={this.handleChange}
+                          style={{width: '130%',position:'relative',top:'10px'}}>
+                      <option>Choose your Devise</option>
+                      <option value="EUR">EUR</option>
+                      <option value="USD">USD</option>
+                      <option value="GBP">GBP</option>
+                      <option value="JPY">JPY</option>
+                  </select>
+            </div>
+
             
            
-             <div className="editerProfile">
+             <div className="editerProfile" style={{width: '41%',position:'relative',left:'5%',top:'20px'}}>
             <button type="submit" className="btn btn-primary">Submit</button>
           </div>
-          <div className="retour">
+          <div className="retour" style={{width: '41%',position:'relative',left:'10%',top:'20px'}}>
             <button type="retour" className="btn btn-primary" onClick={this.retourPrincipale}>Retour</button>
           </div>
            

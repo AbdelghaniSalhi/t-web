@@ -18,6 +18,13 @@ class AddCrypto extends Component {
     name: '',
   }
 
+
+  retourPrincipale(e){
+    e.preventDefault();
+    window.location.replace("/Admin");
+  }
+
+
   handleChange(e){
     let target = e.target;
     let value = target.value;
@@ -51,17 +58,20 @@ class AddCrypto extends Component {
             <form onSubmit={this.handleSubmit}>
               <div className="symbol">
               <label htmlFor="exampleInputEmail1">Symbol</label>
-              <input name="symbol" value={this.state.username} onChange={this.handleChange} type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter symbol" />
+              <input name="symbol" value={this.state.username} onChange={this.handleChange} style={{width: '180%'}} type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter symbol" />
               </div>
               <div className="name">
               <label htmlFor="exampleInputEmail1">Name</label>
-              <input name="name" value={this.state.name} onChange={this.handleChange} type="name" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter name " />
+              <input name="name" value={this.state.name} onChange={this.handleChange} style={{width: '180%'}} type="name" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter name " />
               </div>
               
-              <div className="createAccount">
+              <div className="createAccount" style={{width: '100%',position:'relative',left:'13px'}}>
                 <button type="submit" className="btn btn-primary">Submit</button>
               </div>
             </form>
+                <div className="createAccount" style={{width: '100%',position:'relative',left:'13px'}}>
+                  <button onClick={this.retourPrincipale}  className="btn btn-primary" >Cancel</button>
+                </div>
            
           </div>
           </div>
