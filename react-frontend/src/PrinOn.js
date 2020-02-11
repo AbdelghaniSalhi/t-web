@@ -7,35 +7,41 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Button from 'react-bootstrap/Button';
 
 class PrinOn extends Component {
- 
-    constructor(props){
-       super(props);
-       this.state = {
-           posts:[],
-           p:[]
-       }
-    }
-    componentDidMount(){
-       axios.get('http://localhost:6200/cryptos/logged',{headers : {"auth-token": localStorage.getItem("auth-token")}})
-       .then(response =>{
-            console.log(response)
-           this.setState({posts: response.data})
-       })
-       .catch(error=>{
-       console.log(error)
-       })
-       axios.get('http://localhost:6200/Articles/logged',{headers : {"auth-token": localStorage.getItem("auth-token")}})
-        .then(response =>{
-            console.log(response)
-            this.setState({p: response.data})
-        })
-        .catch(error=>{
-        console.log(error)
-        })
-       }
-      
 
-       
+    constructor(props) {
+        super(props);
+        this.state = {
+            posts: [],
+            p: []
+        }
+    }
+
+    componentDidMount() {
+        axios.get('http://localhost:6200/cryptos/logged', {headers: {"auth-token": localStorage.getItem("auth-token")}})
+            .then(response => {
+                console.log(response)
+                this.setState({posts: response.data})
+            })
+            .catch(error => {
+                console.log(error)
+            })
+        axios.get('http://localhost:6200/Articles/logged', {headers: {"auth-token": localStorage.getItem("auth-token")}})
+            .then(response => {
+                console.log(response)
+                this.setState({p: response.data})
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }
+
+    deconnecter(e) {
+        e.preventDefault();
+        localStorage.removeItem("auth-token");
+        console.log(localStorage.getItem("auth-token"))
+        window.location.replace("/");
+    }
+
        
        render(){
        const { posts}=this.state
@@ -64,7 +70,7 @@ class PrinOn extends Component {
                         <Nav.Link href="/AjouterCrypto">AddCrypto</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                        <Nav.Link href="/">Logout</Nav.Link>
+                        <Nav.Link onClick={this.deconnecter}>Logout</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
                         

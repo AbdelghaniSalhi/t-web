@@ -26,6 +26,12 @@ class AjouterCrypto extends Component {
         posts:[]
     }
 
+
+    retourPrincipale(e){
+        e.preventDefault();
+        window.location.replace("/PrinOn");
+    }
+
     componentDidMount(){
        axios.get('http://localhost:6200/cryptos/liste')
        .then(response =>{
@@ -93,11 +99,12 @@ class AjouterCrypto extends Component {
                     <p></p>
                     <p></p>
                 
-                <Table striped bordered hover size="sm">
-                        <thead>
-                            <tr>
+                <Table striped bordered hover size="sm" style={{width:'60%',margin:'auto'}}>
+                        <thead >
+                            <tr >
                                 
-                                <th>Symbol</th>
+                                <th >Symbol</th>
+                                <th>Add Crypto</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -106,18 +113,24 @@ class AjouterCrypto extends Component {
                     
                         posts.map(post=> <tr key={post.symbole}>
                             
-                            <td>{post}</td>
-                            <td><Button onClick={this.add.bind(this, post)} variant="secondary">Add</Button> </td>
+                            <td style={{textAlign :'center'}}>{post}</td>
+                            <td style={{textAlign :'center'}}><Button onClick={this.add.bind(this, post)} variant="secondary">Add</Button> </td>
                             </tr>):
                             null
                             }   
                         </tbody>
+
                     </Table>
-                   
-                    <div className="createAccount">
-            <button type="submit"  className="btn btn-primary" >Submit</button>
-          </div>
+
+                   <div className="createAccount" style={{width: '41%',position:'relative',left:'29%'}}>
+                       <button type="submit"  className="btn btn-primary" >Submit</button>
+                   </div>
+
                     </form>
+                   <div className="createAccount" style={{width: '41%',position:'relative',left:'29%'}}>
+                       <button onClick={this.retourPrincipale}  className="btn btn-primary" >Cancel</button>
+                   </div>
+
                 </div>
            </div>
 

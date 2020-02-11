@@ -59,10 +59,10 @@ class Login extends Component {
                   <div className="grey-text">
                     <MDBInput label="Email" name="email" value={this.state.email} onChange={this.handleChange} icon="envelope" group type="email" validate error="wrong"
                               success="right" style={{width: '180%'}} />
-                    <MDBInput label="Password" value={this.state.password} onChange={this.handleChange} icon="lock" group type="password" validate style={{width: '180%'}}/>
+                    <MDBInput label="Password" name="password" value={this.state.password} onChange={this.handleChange} icon="lock" group type="password" validate style={{width: '180%'}}/>
                   </div>
                   <div className="text-center" style={{width: '180%',position:'absolute',top:'210px',left:'15px'}}>
-                    <MDBBtn>Login</MDBBtn>
+                    <MDBBtn type="submit">Login</MDBBtn>
                   </div>
                   <p style={{width: '180%',position:'relative',top:'43px',left:'130px'}}><b>Ou</b> </p>
                   <p style={{width: '180%',position:'relative',top:'43px'}}><b>CONNECTEZ-VOUS AVEC</b>...</p>
