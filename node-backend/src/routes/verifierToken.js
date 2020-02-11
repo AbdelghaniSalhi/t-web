@@ -1,3 +1,6 @@
+/* Module de vérification du token de connexion JWT
+*/
+
 const jwt = require('jsonwebtoken');
 
 module.exports =  function authentifier (req, res, next) {

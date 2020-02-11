@@ -1,3 +1,6 @@
+/** Validation des formulaires de connexion et de création de compte
+ */
+
 const Joi = require('@hapi/joi');
 
 const registerValidation = data => {

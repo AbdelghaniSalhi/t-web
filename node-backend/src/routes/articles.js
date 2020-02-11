@@ -1,3 +1,6 @@
+/*Routeur gérant la récupération des flux RSS
+*/
+
 const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 const verifié = require ('./verifierToken');
@@ -5,7 +8,7 @@ const axios = require('axios');
 var CryptoNewsAPI = require('crypto-news-api');
 let CryptoCurrency = require ('../models/crypto.models');
 
-// Get all Articles
+//GET Récupère les articles les plus en vogue concernant les CryptoMonnaies
 router.route('/').get((req, res) =>{
     
     axios.get("https://cryptocontrol.io/api/v1/public/news/", {headers :{ "x-api-key": process.env.API_ARTICLES}})
@@ -30,7 +33,9 @@ router.route('/').get((req, res) =>{
 });
 
 
-// Get By Id Secure Route
+/*GET   Récupère les articles les plus en vogue concernant uniquement les 
+**      Cryptomonnaies auxquelles l'utilisateur est abonné
+*/
 router.route('/logged').get(verifié, async(req, res) =>{
     let result = [];
     let elem = {};
