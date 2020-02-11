@@ -17,6 +17,7 @@ import DeleteCrypto from './DeleteCrypto';
 import AjouterCrypto from './AjouterCrypto';
 import Profil from './Profil';
 import ArticleOff from './ArticleOff';
+import ArticleOn from './ArticleOn';
 
 class App extends Component {
   render() {
@@ -40,6 +41,7 @@ class App extends Component {
               <Route path="/DeleteCrypto" component={DeleteCrypto} />
               <Route path="/AjouterCrypto" component={AjouterCrypto} />
               <Route  path="/ArticleOff/:id" component={ArticleOff} />
+              <Route  path="/ArticleOn/:id" component={ArticleOn} />
               
 
 
