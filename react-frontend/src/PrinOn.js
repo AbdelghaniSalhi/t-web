@@ -11,7 +11,8 @@ class PrinOn extends Component {
     constructor(props){
        super(props);
        this.state = {
-           posts:[]
+           posts:[],
+           p:[]
        }
     }
     componentDidMount(){
@@ -23,6 +24,14 @@ class PrinOn extends Component {
        .catch(error=>{
        console.log(error)
        })
+       axios.get('http://localhost:6200/Articles/logged',{headers : {"auth-token": localStorage.getItem("auth-token")}})
+        .then(response =>{
+            console.log(response)
+            this.setState({p: response.data})
+        })
+        .catch(error=>{
+        console.log(error)
+        })
        }
       
 
@@ -30,6 +39,7 @@ class PrinOn extends Component {
        
        render(){
        const { posts}=this.state
+       const { p}=this.state
        const divStyle = {
        
         height :'100px',
@@ -99,6 +109,37 @@ class PrinOn extends Component {
                               
                             </ButtonGroup>
                              </td>
+                            </tr>):
+                            null
+                            }
+
+                            
+                        </tbody>
+                    </Table>
+                    
+                    <p></p>
+                    <h1>List of Articles </h1>
+                    <p></p>
+                    <p></p>
+                    <Table striped bordered hover size="sm">
+                        <thead>
+                            <tr>
+                            <th>Title</th>
+                            <th>Url </th>
+                            <th>Image</th>
+                            <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {
+                        p.length ?
+                    
+                            p.map(po=> <tr key={po.id}>
+                            <td>{po.titre}</td>
+                            <td>{po.url}</td>
+                            <td><img src={po.image}alt="..." style={ divStyle}/></td>
+                            <td><Button variant="secondary" href={'/ArticleOn/'+ po.id} >+</Button></td>
+                            
                             </tr>):
                             null
                             }
